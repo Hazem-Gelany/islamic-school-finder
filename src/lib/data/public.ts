@@ -64,9 +64,3 @@ export async function getMatchCandidates(locale: string, country?: string, lat?:
   if (error) { console.error('[match]', error.message); return { rows: [] as Candidate[], error: true }; }
   return { rows: (data ?? []) as Candidate[], error: false };
 }
-
-/** Name of a school for the given page language, falling back to English then to any translation. */
-export function schoolName(rec: Record<string, any>, locale: string) {
-  const tr = (rec.translations ?? {}) as Record<string, { name?: string }>;
-  return tr[locale]?.name || tr.en?.name || Object.values(tr).find((x) => x?.name)?.name || '';
-}

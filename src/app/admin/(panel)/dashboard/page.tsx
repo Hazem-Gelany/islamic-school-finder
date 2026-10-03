@@ -12,6 +12,8 @@ export default async function Dashboard() {
   const { supabase, perms } = await requireStaff();
   const { data, error } = await supabase.rpc('admin_dashboard_stats');
   const stats = (data ?? {}) as Record<string, number>;
+  const pending = async (table: string, perm: string) => perms.includes(perm) ? (await supabase.from(table).select('id', { count: 'exact', head: true }).eq('status', 'pending')).count ?? 0 : null;
+  const [claimsWaiting, changesWaiting] = await Promise.all([pending('school_claims', 'claims.review'), pending('school_change_requests', 'schools.write')]);
   const { data: recent } = perms.includes('audit.read')
     ? await supabase.from('audit_log').select('id, entity_type, action, field_name, created_at, school_id').order('id', { ascending: false }).limit(8)
     : { data: null };
@@ -30,6 +32,11 @@ export default async function Dashboard() {
           </div>
         ))}
       </dl>
+      {(claimsWaiting !== null || changesWaiting !== null) && (
+        <section aria-label="Waiting for review" className="mt-8 grid gap-4 sm:grid-cols-2">
+          {claimsWaiting !== null && <Link href="/admin/claims" className="rounded-2xl border border-[#E2B95B] bg-[#FFFBEF] p-5 hover:shadow"><p className="text-sm font-medium text-muted">School claims waiting</p><p className="mt-2 text-4xl font-semibold text-bronze">{claimsWaiting}</p></Link>}
+          {changesWaiting !== null && <Link href="/admin/changes" className="rounded-2xl border border-[#E2B95B] bg-[#FFFBEF] p-5 hover:shadow"><p className="text-sm font-medium text-muted">Change requests waiting</p><p className="mt-2 text-4xl font-semibold text-bronze">{changesWaiting}</p></Link>}
+        </section>)}
       {recent && (
         <section className="mt-10">
           <div className="mb-3 flex items-center justify-between"><h2 className="text-xl font-semibold">Recent changes</h2><Link href="/admin/audit-log" className="text-sm font-semibold text-forest-900 underline">View all</Link></div>

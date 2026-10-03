@@ -2,13 +2,11 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { Candidate, Result, Status } from '@/features/match/engine';
 import { CompareToggle } from './CompareToggle';
-import { SaveButton } from './SaveButton';
-import type { SaveState } from './SchoolCard';
 import { VerificationBadge } from './VerificationBadge';
 
 const ICON: Record<Status, string> = { match: '✓', no: '✗', unknown: '?' };
 
-export function MatchCard({ c, r, save }: { c: Candidate; r: Result; save?: SaveState }) {
+export function MatchCard({ c, r }: { c: Candidate; r: Result }) {
   const t = useTranslations('Match');
   const groups: [Status, string, string][] = [['match', t('matched'), 'text-forest-900'], ['no', t('notMatched'), 'text-bronze'], ['unknown', t('unknown'), 'text-muted']];
   return (
@@ -35,7 +33,6 @@ export function MatchCard({ c, r, save }: { c: Candidate; r: Result; save?: Save
       </div>
       <div className="flex flex-wrap gap-3">
         <Link href={`/schools/${c.country_slug}/${c.city_slug}/${c.slug}`} className="flex h-11 items-center rounded-xl border-[1.5px] border-forest-900 px-5 font-semibold text-forest-900 hover:bg-mint-100">{t('view')}</Link>
-        {save && <SaveButton id={c.id} name={c.name} saved={save.saved} signedIn={save.signedIn} />}
         <CompareToggle id={c.id} name={c.name} />
       </div>
     </li>

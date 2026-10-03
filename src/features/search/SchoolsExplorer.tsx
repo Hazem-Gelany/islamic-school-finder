@@ -7,7 +7,6 @@ import { Filters } from '@/components/public/Filters';
 import { Pagination } from '@/components/public/Pagination';
 import { SchoolCard } from '@/components/public/SchoolCard';
 import { getFacets, pick, runSearch } from '@/lib/data/public';
-import { getSavedState } from '@/lib/user';
 import { PAGE_SIZE, SORTS, toQuery, type Search } from './params';
 
 export async function SchoolsExplorer({ locale, search, preset }: { locale: string; search: Search; preset?: { country?: string; city?: string } }) {
@@ -15,7 +14,6 @@ export async function SchoolsExplorer({ locale, search, preset }: { locale: stri
   const c = await getTranslations({ locale, namespace: 'Common' });
   const s: Search = { ...search, country: preset?.country ?? search.country, city: preset?.city ?? search.city };
   const [facets, { rows, total, error }] = await Promise.all([getFacets(), runSearch(s, locale)]);
-  const saved = await getSavedState(rows.map((r) => r.id));
   const country = facets.countries.find((x) => x.slug === s.country);
   const city = facets.cities.find((x) => x.slug === s.city);
   const place = city ? pick(city.name as Record<string, string>, locale) : country ? pick(country.name as Record<string, string>, locale) : '';
@@ -60,7 +58,7 @@ export async function SchoolsExplorer({ locale, search, preset }: { locale: stri
               <p className="font-display text-2xl font-semibold">{t('noResults')}</p><p className="mt-2 text-muted">{t('noResultsHint')}</p>
               <Link href="/schools" className="mt-5 inline-flex h-11 items-center rounded-xl bg-forest-900 px-5 font-semibold text-cream-50">{t('clear')}</Link>
             </div>)}
-          <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 [&>li]:relative">{rows.map((r) => <SchoolCard key={r.id} s={r} save={{ signedIn: saved.signedIn, saved: saved.saved.has(r.id) }} />)}</ul>
+          <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 [&>li]:relative">{rows.map((r) => <SchoolCard key={r.id} s={r} />)}</ul>
           <Pagination page={Math.min(s.page, pages)} pages={pages} href={(p) => href({ page: p })} />
         </section>
       </main>

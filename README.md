@@ -1,11 +1,11 @@
 # Islamic School Finder
 
-Phases 1-9: foundation, database, admin dashboard, public website, compare, match, import/export with settings, and accounts (login, saved schools, contact school, claims, about). Stack: Next.js (App Router), TypeScript, Tailwind, next-intl, Supabase (Postgres + PostGIS, Auth, Storage, RLS).
+Phases 1-9: foundation, database, admin dashboard, public website, compare, match, import/export with settings, and school claims with a reviewed school portal. Stack: Next.js (App Router), TypeScript, Tailwind, next-intl, Supabase (Postgres + PostGIS, Auth, Storage, RLS).
 
 ## Setup
 1. `npm install`
 2. Create a Supabase project (or run `supabase start` locally). Copy `.env.example` to `.env.local` and fill in the URL and keys.
-3. Apply the schema: `supabase link --project-ref <ref>` then `supabase db push` (runs `supabase/migrations/0001` to `0010` in order). Locally, `supabase db reset` also loads `supabase/seed.sql`.
+3. Apply the schema: `supabase link --project-ref <ref>` then `supabase db push` (runs `supabase/migrations/0001` to `0005` in order). Locally, `supabase db reset` also loads `supabase/seed.sql`.
 4. Optional demo data: run `supabase/seed.sql` in the SQL editor (dev only; rows are flagged `is_demo`, remove with `delete from schools where is_demo;`).
 5. Create your first account by signing up, then promote it in the SQL editor:
    `insert into user_roles (user_id, role) select id, 'super_admin' from auth.users where email = 'you@example.com';`
@@ -20,9 +20,9 @@ Phases 1-9: foundation, database, admin dashboard, public website, compare, matc
 | 0004 | `school-media` storage bucket and policies |
 | 0005 | Reference data: languages, curricula, grades, facilities, fee categories |
 | 0007 | Public API: `search_schools` (multilingual text, filters, distance, sorting), `search_facets`, `get_school_public` |
+| 0010 | Claims and change requests: claim limits, `review_school_claim`, `revoke_school_claim`, `school_change_requests`, `submit_change_request`, `submit_media_change`, `review_change_request`, reviewer lists, `my_claims`, `my_schools`, tighter storage and RLS rules for representatives |
 | 0009 | CSV import (`import_mark_duplicates`, `commit_import`), `export_schools`, `bulk_edit_schools`, `admin_list_users`, `set_user_roles`, `admin_list_cities` |
 | 0008 | Compare and Match APIs: `get_schools_for_compare`, `match_candidates` |
-| 0010 | Accounts: contact details and abuse limits on `contact_requests`, claim guards, `admin_list_claims`, `my_saved_schools`, `my_member_schools`, `my_messages`, `my_claims` |
 | 0006 | Admin API: `save_school` (atomic), `admin_list_schools` (server-side paging/sort/filter), `get_school_for_edit`, `admin_dashboard_stats` |
 
 ## Admin panel (Phase 3)
@@ -46,6 +46,16 @@ Preview links open the public page, which arrives in Phase 4 (staff can see draf
 - Staff preview: the admin "Preview" links add `?preview=1`, which uses the staff session so drafts can be checked before publishing.
 - Not in this phase: Compare, Match, Save and Contact-school buttons (Phases 6, 7 and 9). Public pages are rendered on demand; response caching is part of Phase 10 hardening.
 
+## Accounts, claims and the school portal (Phase 9)
+**Supabase Auth settings (Authentication, URL configuration):** set *Site URL* to your `NEXT_PUBLIC_SITE_URL`, add `<site url>/auth/callback` to *Redirect URLs*, and keep *Confirm email* switched on. Configure a real SMTP sender before launch, because the built-in mailer is heavily rate-limited.
+
+- **Accounts** (`/en/login`, `/register`, `/forgot-password`, `/reset-password`, `/account`, in English, Arabic and Malay): email and password, email confirmation, password reset, sign out. Sign-up and reset never reveal whether an address already has an account. Post-login redirects accept same-site paths only.
+- **Claiming** (`/claim`, or *Claim this profile* on any school page): a signed-in person sends a claim with their role, a contact email, an optional evidence link and a message. Only published schools can be claimed; each person can have 3 claims waiting and 10 per day; every claim and decision is audited. They follow the status under *My account*.
+- **Reviewing** (`/admin/claims`, Super Admin / Verification Manager): approve, reject or revoke, with a note the person sees. Approving gives portal access and sets the school to *School managed*; revoking removes access, rejects their pending changes and steps verification back down if nobody else manages the school.
+- **School portal** (`/portal`, English only): approved representatives see only their own schools. **Published immediately:** phone, email, website, admissions page, social links, student capacity and the yes/no options for Quran, Arabic, Islamic studies, boarding, transport and scholarships. **Reviewed first:** names and descriptions, fees, address and map location, school type, curricula, grade levels, facilities, languages, founded year and all photos. The public profile stays unchanged until a reviewer approves. The URL name, country, city and verification can only be changed by staff.
+- **Change requests** (`/admin/changes`, Super Admin / Data Manager): a before/after table of every proposed change, thumbnails of photos, approve or reject with a note. Approval is one transaction and is attributed to the reviewer in the audit log. A request can add or edit a translation but never remove one.
+- **How it is enforced:** the database, not the pages. Representatives have no write access to translations, fees, categories or media rows; a trigger limits their direct edits to the fields above; uploads are only possible into `<school>/pending/` and cannot touch published images.
+
 ## Import, export and settings (Phase 8)
 - **Import** (`/admin/import`): upload a CSV (UTF-8, comma separated, up to 2,000 rows / 2 MB). Download the template for the columns. Each row is checked, and the report shows how many rows are valid, duplicates and invalid, with the spreadsheet row number and a plain-language reason for each problem (downloadable as CSV). Nothing is saved until you confirm. Duplicates are found against existing schools (same city and URL name, same website, same phone, or a very similar name in the same city) and inside the file. Confirming saves every valid row in **one transaction**: if anything fails, nothing is imported. Imports only create schools (as drafts at the lowest verification level unless the file says `active`); they never change existing schools.
 - **Export** (`/admin/export`, or **Export CSV** on the Schools page for the current filters): same columns as the importer, so a file can be edited and re-imported. Cells that spreadsheet programs could run as formulas are protected; the importer removes that protection.
@@ -58,19 +68,9 @@ Preview links open the public page, which arrives in Phase 4 (staff can see draf
 - **Compare** (`/[locale]/compare?schools=id1,id2,id3`): up to four schools side by side. Rows that differ are highlighted; missing information is shown as "Not provided". Visitors pick schools with the Compare button on cards and profiles (stored in their browser, no account needed); a bar at the bottom of every page shows the selection. The link is shareable and uses school IDs, so no data is duplicated.
 - **Match** (`/[locale]/match`): a rules-based, explainable engine in `src/features/match/engine.ts`. Only the preferences the parent sets are counted (city, distance, grade, budget, curriculum, gender, language, Islamic studies, Quran, Arabic, boarding, transport, facilities). For every school each preference is *matched*, *not matched*, or *not provided by the school*, shown as "Matches 8 of your 10 preferences". Schools are ordered by how many preferences they meet, then alphabetically. There is no quality score, and verification level does not affect the order. A country (or a city's country) only narrows which schools are considered, and budgets are never compared across different currencies.
 
-## Accounts, saving, contact and claims (Phase 9)
-- **Accounts** (`/[locale]/login`, `/signup`, `/forgot-password`, `/reset-password`): email + password through Supabase Auth, in all three languages. Email links land on `/api/auth/callback`, which signs the visitor in and sends them on to a same-site page only (`safeNext`). The login page remembers where you came from (`?next=`). Admin keeps its own English login at `/admin/login`.
-- **Supabase dashboard settings you must set:** Authentication → URL Configuration: Site URL = `NEXT_PUBLIC_SITE_URL`, and add `<site>/api/auth/callback` to Redirect URLs. Email confirmation can stay on (recommended). Confirmation and reset emails use Supabase's default templates until you customise them.
-- **Save** (heart button on cards, profiles and Find My School results): signed-out visitors are sent to log in and returned to the same page. The list is on `/account`.
-- **Contact school** (box on each published school page): requires an account, so the school gets a real, verified email address. Name, optional phone, message (10-2,000 characters) and an explicit consent tick. The visitor's email is copied from their account by a database trigger. Limits in the database: 5 messages per person per day, and 1 per school per day. A hidden honeypot field catches simple bots.
-- **School inbox** (`/account`, shown when you manage a school): messages with the sender's email and phone, and buttons to mark read, replied, closed or spam. Schools can change only the status, never the message (enforced by a trigger).
-- **Claims** (`/claim`, `/claim/[schoolId]`): search for a school, give your role, a contact email and an optional evidence link. Limits: one pending claim per school per person, 5 pending in total. Reviewers use **School claims** in the admin panel (`claims.review`: Super Admin and Verification Manager) and approve or reject with a note, in one transaction through `review_school_claim`. Approving adds the person to `school_members`. Claimants follow the status on `/account`.
-- **About, Contact, Privacy** pages. Set `NEXT_PUBLIC_CONTACT_EMAIL` to show the contact address. The privacy text is a plain-language starting draft that describes what the app does today; have it reviewed before launch.
-
 ## Tests
-`supabase/tests/` holds SQL tests that were run against PostgreSQL 16 + PostGIS: load `00_supabase_stub.sql` (stands in for Supabase's `auth` and `storage` on a plain Postgres), then the migrations and seed, then `01`-`07`. Load a fresh database for each file, because the tests create their own users and schools. They cover multilingual search, row-level security for each role, audit entries, verification rules, claim approval and atomic saves. On a real Supabase project you do not need the stub.
-`07_accounts_contact_claims.sql` covers saved schools, contact limits and ownership, claim guards and review, and the school inbox.
-`npm test` runs 42 unit tests (validation, form mapping, completeness, search parameters, compare ids, the matching engine, the CSV reader/writer, import row validation, and account validation including the safe-redirect check). End-to-end tests arrive in Phase 10.
+`supabase/tests/` holds SQL tests that were run against PostgreSQL 16 + PostGIS: load `00_supabase_stub.sql` (stands in for Supabase's `auth` and `storage` on a plain Postgres), then the migrations and seed, then `01`-`08`. Load a fresh database for each file, because the tests create their own users and schools. They cover multilingual search, row-level security for each role, audit entries, verification rules, claim approval and atomic saves. On a real Supabase project you do not need the stub.
+`npm test` runs 52 unit tests (validation, form mapping, completeness, search parameters, compare ids, the matching engine, the CSV reader/writer, import row validation, safe redirects, the change-request diff and the direct-versus-reviewed splitter). End-to-end tests arrive in Phase 10.
 
 ## Key design decisions
 - One school row, translations in `school_translations` (unique per school and language).
@@ -81,9 +81,11 @@ Preview links open the public page, which arrives in Phase 4 (staff can see draf
 - Admin mutations must use the signed-in user's client (not the service-role key) so audit entries carry the user id.
 
 ## Known limits (next phases)
-- **Nobody is emailed when a message or claim arrives.** Schools see messages only by logging in, and claimants see decisions on `/account`. Email notifications need an email provider (Phase 10).
-- Approved representatives get the inbox, but not yet a screen to edit their school's details; staff still edit schools in the admin panel.
+- Nobody is emailed when a claim or change request is decided; the status appears in the person's account. Email notifications need a mail provider (Phase 10).
+- The school portal is English only; the public site and account pages are trilingual.
+- Sign-in has no application-level rate limit beyond Supabase's own (Phase 10).
 - Import only creates schools; updating existing schools by CSV is not supported (use the edit form or bulk edit).
 - Staff accounts must exist before roles can be assigned (create them in the Supabase dashboard).
-- Saved searches (the table exists) and a profile/delete-my-account screen are not built.
-- Rate limiting is per account in the database; IP-based limits and captcha, response caching and end-to-end tests are Phase 10. Because the header now reads the sign-in cookie, public pages stay dynamic; cache the data calls rather than whole pages when you add caching.
+- The header links to `/compare`, `/match`, `/about`, `/login` and `/claim`, which are not built yet.
+- School representatives can edit operational fields and translations directly; a review queue for "important fields" is not built yet.
+- Rate limiting and spam protection for contact requests are application-level work (Phase 10).

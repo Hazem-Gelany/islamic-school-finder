@@ -9,7 +9,6 @@ import { MatchCard } from '@/components/public/MatchCard';
 import { Pagination } from '@/components/public/Pagination';
 import { altPaths, getFacets, getMatchCandidates, pick } from '@/lib/data/public';
 import { PAGE_SIZE, parseSearch, toQuery } from '@/features/search/params';
-import { getSavedState } from '@/lib/user';
 import { activeKeys, evaluate, sortResults } from '@/features/match/engine';
 
 type Props = { params: Promise<{ locale: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> };
@@ -44,8 +43,6 @@ export default async function MatchPage({ params, searchParams }: Props) {
   const shown = fullOnly ? results.filter((x) => x.r.matched === x.r.total) : results;
   const pages = Math.max(1, Math.ceil(shown.length / PAGE_SIZE));
   const page = Math.min(search.page, pages);
-  const visible = shown.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const saved = await getSavedState(visible.map((x) => x.c.id));
   const q = (o: Record<string, string>) => { const base = new URLSearchParams(toQuery({ ...search, page: 1, sort: 'relevance', q: undefined })); Object.entries(o).forEach(([k, v]) => (v ? base.set(k, v) : base.delete(k))); const s = base.toString(); return `/match${s ? `?${s}` : ''}`; };
 
   return (
@@ -75,7 +72,7 @@ export default async function MatchPage({ params, searchParams }: Props) {
               </div>
               {failed && <p role="alert" className="rounded-xl bg-[#FCEDEA] p-4 text-[#8A1F11]">{t('error')}</p>}
               {!failed && shown.length === 0 && <div className="rounded-2xl border border-line bg-white p-10 text-center"><p className="font-display text-2xl font-semibold">{fullOnly ? t('noFull') : t('noResults')}</p><p className="mt-2 text-muted">{t('noResultsHint')}</p></div>}
-              <ul className="grid gap-5">{visible.map(({ c, r }) => <MatchCard key={c.id} c={c} r={r} save={{ signedIn: saved.signedIn, saved: saved.saved.has(c.id) }} />)}</ul>
+              <ul className="grid gap-5">{shown.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map(({ c, r }) => <MatchCard key={c.id} c={c} r={r} />)}</ul>
               <Pagination page={page} pages={pages} href={(n) => q({ ...(fullOnly ? { full: '1' } : {}), page: String(n) })} />
             </>)}
         </section>

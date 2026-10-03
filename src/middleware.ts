@@ -6,8 +6,9 @@ import { updateSession } from './lib/supabase/middleware';
 const intl = createMiddleware(routing);
 
 export async function middleware(req: NextRequest) {
-  // Admin is English-only for the MVP and lives outside [locale].
-  if (req.nextUrl.pathname.startsWith('/admin')) return updateSession(req, NextResponse.next({ request: req }));
+  // Admin, the school portal and auth callbacks are English-only / locale-free and live outside [locale].
+  const p = req.nextUrl.pathname;
+  if (p.startsWith('/admin') || p.startsWith('/portal') || p.startsWith('/auth')) return updateSession(req, NextResponse.next({ request: req }));
   return updateSession(req, intl(req));
 }
 

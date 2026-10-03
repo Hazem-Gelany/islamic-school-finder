@@ -7,14 +7,11 @@ import { SiteFooter } from '@/components/SiteFooter';
 import { Breadcrumbs } from '@/components/public/Breadcrumbs';
 import { VerificationBadge } from '@/components/public/VerificationBadge';
 import { CompareToggle } from '@/components/public/CompareToggle';
-import { SaveButton } from '@/components/public/SaveButton';
-import { ContactSchool } from '@/components/public/ContactSchool';
-import { getSavedState, getUser } from '@/lib/user';
 import { SchoolCard } from '@/components/public/SchoolCard';
 import { SITE_URL, altPaths, getSchoolPublic, mediaUrl, money, pick, runSearch } from '@/lib/data/public';
 import { parseSearch } from '@/features/search/params';
 
-type Props = { params: Promise<{ locale: string; country: string; city: string; school: string }>; searchParams: Promise<{ preview?: string; contact?: string }> };
+type Props = { params: Promise<{ locale: string; country: string; city: string; school: string }>; searchParams: Promise<{ preview?: string }> };
 type I18n = Record<string, string>;
 
 /** Chooses the best translation for the page language and says which language was actually used. */
@@ -45,7 +42,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 
 export default async function SchoolPage({ params, searchParams }: Props) {
   const { locale, country, city, school } = await params; setRequestLocale(locale);
-  const sp = await searchParams, preview = sp.preview === '1';
+  const preview = (await searchParams).preview === '1';
   const rec = await getSchoolPublic(country, city, school, preview);
   if (!rec) notFound();
   const t = await getTranslations({ locale, namespace: 'School' });
@@ -63,9 +60,6 @@ export default async function SchoolPage({ params, searchParams }: Props) {
   const socials = Object.entries((rec.social_links ?? {}) as Record<string, string>).filter(([, u]) => safeUrl(u));
 
   const more = (await runSearch({ ...parseSearch({}), country, city }, locale, 4)).rows.filter((r) => r.id !== rec.id).slice(0, 3);
-  const saved = await getSavedState([rec.id, ...more.map((r) => r.id)]);
-  const { user } = await getUser();
-  const canMessage = rec.status === 'active' && !preview;
   const facts: [string, React.ReactNode][] = [
     [t('type'), pick(rec.school_type, locale) || null], [t('gender'), rec.gender_policy ? ts(`gender_${rec.gender_policy}` as never) : null],
     [t('gradeLevels'), rec.grade_levels.map((g: I18n) => pick(g, locale)).join(', ') || null], [t('curriculum'), rec.curricula.map((x: I18n) => pick(x, locale)).join(', ') || null],
@@ -98,7 +92,7 @@ export default async function SchoolPage({ params, searchParams }: Props) {
             <div>
               <h1 lang={lang} dir={dir} className="font-display text-4xl font-medium tracking-tight lg:text-5xl">{c.name}</h1>
               <p className="mt-2 text-lg text-mist">{[rec.address, cityName, countryName].filter(Boolean).join(', ')}</p>
-              <div className="mt-3 flex flex-wrap items-center gap-3"><VerificationBadge status={rec.verification_status} /><SaveButton id={rec.id} name={c.name ?? ''} saved={saved.saved.has(rec.id)} signedIn={saved.signedIn} tone="dark" /><CompareToggle id={rec.id} name={c.name ?? ""} tone="dark" /></div>
+              <div className="mt-3 flex flex-wrap items-center gap-3"><VerificationBadge status={rec.verification_status} /><CompareToggle id={rec.id} name={c.name ?? ""} tone="dark" /></div>
             </div>
           </div>
         </div>
@@ -169,7 +163,6 @@ export default async function SchoolPage({ params, searchParams }: Props) {
         </div>
 
         <aside className="flex flex-col gap-6 lg:sticky lg:top-6 lg:self-start">
-          {canMessage && <ContactSchool locale={locale} schoolId={rec.id} schoolName={c.name ?? ''} back={`/schools/${country}/${city}/${school}`} status={sp.contact} signedIn={!!user} defaultName={(user?.user_metadata?.display_name as string | undefined) ?? undefined} />}
           <section aria-labelledby="contact" className={sec}>
             <h2 id="contact" className={h2}>{t('contact')}</h2>
             <ul className="flex flex-col gap-3">
@@ -179,8 +172,8 @@ export default async function SchoolPage({ params, searchParams }: Props) {
               {socials.map(([k, u]) => <li key={k}><a className="font-semibold capitalize underline" href={u} target="_blank" rel="noopener noreferrer nofollow">{k}</a></li>)}
               {!rec.phone && !rec.email && !web && <li className="text-muted">{t('notProvided')}</li>}
             </ul>
+            <p className="mt-5 border-t border-line pt-4 text-sm text-muted">{t('claimPrompt')} <Link className="font-semibold text-forest-900 underline" href={`/schools/${country}/${city}/${school}/claim`}>{t('claimLink')}</Link></p>
           </section>
-          {canMessage && <p className="rounded-2xl bg-sand-100 p-5 text-sm"><span className="font-semibold">{t('ownerPrompt')}</span> <Link href={`/claim/${rec.id}`} className="font-semibold underline">{t('ownerLink')}</Link></p>}
           {rec.latitude != null && (
             <section aria-labelledby="map" className={sec}>
               <h2 id="map" className={h2}>{t('location')}</h2>
@@ -194,7 +187,7 @@ export default async function SchoolPage({ params, searchParams }: Props) {
       {more.length > 0 && (
         <section aria-labelledby="more" className="mx-auto max-w-7xl px-6 pb-14 lg:px-16">
           <h2 id="more" className="mb-5 font-display text-2xl font-semibold">{t('moreIn', { city: cityName })}</h2>
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 [&>li]:relative">{more.map((r) => <SchoolCard key={r.id} s={r} save={{ signedIn: saved.signedIn, saved: saved.saved.has(r.id) }} />)}</ul>
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 [&>li]:relative">{more.map((r) => <SchoolCard key={r.id} s={r} />)}</ul>
           <Link href={`/schools/${country}/${city}`} className="mt-5 inline-block font-semibold underline">{t('allIn', { city: cityName })}</Link>
         </section>)}
       <SiteFooter />

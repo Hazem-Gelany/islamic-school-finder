@@ -2,12 +2,9 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { mediaUrl, money, type SchoolRow } from '@/lib/data/public';
 import { CompareToggle } from './CompareToggle';
-import { SaveButton } from './SaveButton';
 import { VerificationBadge } from './VerificationBadge';
 
-export type SaveState = { signedIn: boolean; saved: boolean };
-
-export function SchoolCard({ s, save }: { s: SchoolRow; save?: SaveState }) {
+export function SchoolCard({ s }: { s: SchoolRow }) {
   const t = useTranslations('Schools');
   const locale = useLocale();
   const chips = [s.gender_policy && t(`gender_${s.gender_policy}` as never), s.offers_quran && t('quran'), s.offers_arabic && t('arabic'), s.has_boarding && t('boarding'), s.has_transport && t('transport')].filter(Boolean) as string[];
@@ -33,10 +30,7 @@ export function SchoolCard({ s, save }: { s: SchoolRow; save?: SaveState }) {
         <p className="text-[15px] font-semibold text-forest-900">
           {s.tuition_annual_min != null ? t('from', { amount: money(s.tuition_annual_min, s.currency_code, locale) }) : <span className="font-normal text-muted">{t('feesNotListed')}</span>}
         </p>
-        <div className="flex flex-wrap gap-2">
-          {save && <SaveButton id={s.id} name={s.name} saved={save.saved} signedIn={save.signedIn} />}
-          <CompareToggle id={s.id} name={s.name} />
-        </div>
+        <CompareToggle id={s.id} name={s.name} />
       </div>
     </li>
   );

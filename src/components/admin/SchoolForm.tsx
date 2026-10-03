@@ -35,9 +35,16 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
   return <label className="flex min-h-11 cursor-pointer items-center gap-3"><input type="checkbox" className="size-5" checked={checked} onChange={(e) => onChange(e.target.checked)} /><span>{label}</span></label>;
 }
 
-export function SchoolForm({ schoolId, initial, lookups, canVerify, preview, mediaSlot }: {
+export type FormResult = { ok: true; id?: string; message?: string } | Extract<SaveResult, { ok: false }>;
+
+/** Used by staff (mode "admin") and by approved school representatives (mode "portal"). In the portal the URL name and place are locked and there is no publishing or verification step. */
+export function SchoolForm({ schoolId, initial, lookups, canVerify, preview, mediaSlot, mode = 'admin', submitAction }: {
   schoolId: string | null; initial: V; lookups: Lookups; canVerify: boolean; preview?: string; mediaSlot?: React.ReactNode;
+  mode?: 'admin' | 'portal'; submitAction?: (id: string | null, payload: unknown, confirmDuplicate?: boolean) => Promise<FormResult>;
 }) {
+  const portal = mode === 'portal';
+  const visible = STEPS.map((_, i) => i).filter((i) => !portal || i !== 7);
+
   const router = useRouter();
   const [v, setV] = useState<V>(initial);
   const [step, setStep] = useState(0);
@@ -75,10 +82,10 @@ export function SchoolForm({ schoolId, initial, lookups, canVerify, preview, med
     }
     setErrors({});
     start(async () => {
-      const res = await saveSchool(schoolId, payload, confirmDuplicate);
+      const res: FormResult = await (submitAction ?? saveSchool)(schoolId, payload, confirmDuplicate);
       if (res.ok) {
-        if (!schoolId) return router.push(`/admin/schools/${res.id}?msg=${encodeURIComponent(status === 'active' ? 'School published.' : 'School saved.')}`);
-        set('status', status); setBanner({ tone: 'ok', text: 'Saved.' }); router.refresh();
+        if (!schoolId && res.id) return router.push(`/admin/schools/${res.id}?msg=${encodeURIComponent(status === 'active' ? 'School published.' : 'School saved.')}`);
+        if (!portal) set('status', status); setBanner({ tone: 'ok', text: res.message ?? 'Saved.' }); router.refresh();
       } else {
         const fe: Record<string, string> = {};
         res.fieldErrors?.forEach((f) => (fe[f.path] ??= f.message));
@@ -100,7 +107,8 @@ export function SchoolForm({ schoolId, initial, lookups, canVerify, preview, med
   return (
     <div>
       <ol className="mb-6 flex flex-wrap gap-2" aria-label="Steps">
-        {STEPS.map((n, i) => {
+        {visible.map((i) => {
+          const n = STEPS[i];
           const bad = Object.keys(errors).some((k) => (k.startsWith('tr.') ? 0 : stepOf(k)) === i);
           return <li key={n}><button type="button" onClick={() => setStep(i)} aria-current={step === i ? 'step' : undefined}
             className={`flex h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold ${step === i ? 'border-forest-900 bg-forest-900 text-cream-50' : bad ? 'border-[#B3261E] bg-[#FCEDEA] text-[#8A1F11]' : 'border-[#B9C4BD] bg-white'}`}>
@@ -126,7 +134,7 @@ export function SchoolForm({ schoolId, initial, lookups, canVerify, preview, med
             <input {...a11y('name', `tr.${lang}.name`)} {...L('name')} className={inputCls} value={tr.name} maxLength={200}
               onChange={(e) => { setTr('name', e.target.value); if (lang === 'en' && !slugTouched) set('slug', slugify(e.target.value)); }} /></Field>
           <Field label="URL name" id="slug" error={err('slug')} hint="Used in the web address, e.g. al-noor-islamic-school. Lowercase letters, numbers and hyphens.">
-            <input {...a11y('slug', 'slug')} className={inputCls} value={v.slug} onChange={(e) => { setSlugTouched(true); set('slug', e.target.value); }} /></Field>
+            <input {...a11y('slug', 'slug')} disabled={portal} className={inputCls} value={v.slug} onChange={(e) => { setSlugTouched(true); set('slug', e.target.value); }} /></Field>
           <div className="md:col-span-2"><Field label={`Description (${lang.toUpperCase()})`} id="desc" error={err('description')}>
             <textarea id="desc" {...L('description')} className={areaCls} value={tr.description} maxLength={5000} onChange={(e) => setTr('description', e.target.value)} /></Field></div>
           <div className="md:col-span-2"><Field label={`Admission information (${lang.toUpperCase()})`} id="adm">
@@ -136,12 +144,12 @@ export function SchoolForm({ schoolId, initial, lookups, canVerify, preview, med
         </div>}
 
         {step === 1 && <div className="grid gap-5 md:grid-cols-2">
-          <Field label="Country" id="country" error={err('country_id')}><select {...a11y('country', 'country_id')} className={inputCls} value={v.country_id}
+          <Field label="Country" id="country" error={err('country_id')}><select {...a11y('country', 'country_id')} disabled={portal} className={inputCls} value={v.country_id}
             onChange={(e) => { const c = lookups.countries.find((x) => String(x.id) === e.target.value); setV((p) => ({ ...p, country_id: e.target.value, region_id: '', city_id: '', currency_code: p.currency_code || c?.currency || '' })); }}>
             <option value="">Select country</option>{lookups.countries.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}</select></Field>
-          <Field label="Region / state" id="region" error={err('region_id')}><select id="region" className={inputCls} value={v.region_id} disabled={!regions.length} onChange={(e) => setV((p) => ({ ...p, region_id: e.target.value, city_id: '' }))}>
+          <Field label="Region / state" id="region" error={err('region_id')}><select id="region" className={inputCls} value={v.region_id} disabled={portal || !regions.length} onChange={(e) => setV((p) => ({ ...p, region_id: e.target.value, city_id: '' }))}>
             <option value="">{regions.length ? 'Not set' : 'No regions for this country'}</option>{regions.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}</select></Field>
-          <Field label="City" id="city" error={err('city_id')} hint="Missing a city? Ask a Super Admin to add it under categories."><select {...a11y('city', 'city_id')} className={inputCls} value={v.city_id} disabled={!v.country_id} onChange={(e) => set('city_id', e.target.value)}>
+          <Field label="City" id="city" error={err('city_id')} hint="Missing a city? Ask a Super Admin to add it under categories."><select {...a11y('city', 'city_id')} className={inputCls} value={v.city_id} disabled={portal || !v.country_id} onChange={(e) => set('city_id', e.target.value)}>
             <option value="">Select city</option>{cities.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}</select></Field>
           <Field label="Postal code" id="zip"><input id="zip" className={inputCls} value={v.postal_code} maxLength={20} onChange={(e) => set('postal_code', e.target.value)} /></Field>
           <div className="md:col-span-2"><Field label="Street address" id="addr"><input id="addr" className={inputCls} value={v.address} maxLength={500} onChange={(e) => set('address', e.target.value)} /></Field></div>
@@ -212,15 +220,15 @@ export function SchoolForm({ schoolId, initial, lookups, canVerify, preview, med
 
       <div className="sticky bottom-0 mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line bg-cream-50 py-4">
         <div className="flex gap-2">
-          <Link href="/admin/schools" className="flex h-12 items-center rounded-xl border border-[#B9C4BD] px-5 font-semibold">Cancel</Link>
-          <button type="button" disabled={step === 0} onClick={() => setStep(step - 1)} className="h-12 rounded-xl border border-[#B9C4BD] px-5 font-semibold disabled:opacity-40">Back</button>
-          <button type="button" disabled={step === STEPS.length - 1} onClick={() => setStep(step + 1)} className="h-12 rounded-xl border-[1.5px] border-forest-900 px-5 font-semibold text-forest-900 disabled:opacity-40">Next</button>
+          <Link href={portal ? '/portal' : '/admin/schools'} className="flex h-12 items-center rounded-xl border border-[#B9C4BD] px-5 font-semibold">{portal ? 'Back to my schools' : 'Cancel'}</Link>
+          <button type="button" disabled={visible.indexOf(step) <= 0} onClick={() => setStep(visible[visible.indexOf(step) - 1])} className="h-12 rounded-xl border border-[#B9C4BD] px-5 font-semibold disabled:opacity-40">Back</button>
+          <button type="button" disabled={visible.indexOf(step) >= visible.length - 1} onClick={() => setStep(visible[visible.indexOf(step) + 1])} className="h-12 rounded-xl border-[1.5px] border-forest-900 px-5 font-semibold text-forest-900 disabled:opacity-40">Next</button>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {pending && <span role="status" className="text-sm text-muted">Saving…</span>}
-          {preview ? <a href={preview} target="_blank" rel="noreferrer" className="flex h-12 items-center rounded-xl border border-[#B9C4BD] px-5 font-semibold">Preview</a> : <span className="text-xs text-muted">Preview is available after the first save</span>}
-          {draftish && <button type="button" disabled={pending} onClick={() => submit('draft')} className="h-12 rounded-xl border-[1.5px] border-forest-900 px-5 font-semibold text-forest-900">Save draft</button>}
-          {draftish ? <button type="button" disabled={pending} onClick={() => submit('active')} className="h-12 rounded-xl bg-forest-900 px-5 font-semibold text-cream-50 hover:bg-[#14503F]">Publish</button>
+          {portal && !preview ? null : preview ? <a href={preview} target="_blank" rel="noreferrer" className="flex h-12 items-center rounded-xl border border-[#B9C4BD] px-5 font-semibold">Preview</a> : <span className="text-xs text-muted">Preview is available after the first save</span>}
+          {!portal && draftish && <button type="button" disabled={pending} onClick={() => submit('draft')} className="h-12 rounded-xl border-[1.5px] border-forest-900 px-5 font-semibold text-forest-900">Save draft</button>}
+          {!portal && draftish ? <button type="button" disabled={pending} onClick={() => submit('active')} className="h-12 rounded-xl bg-forest-900 px-5 font-semibold text-cream-50 hover:bg-[#14503F]">Publish</button>
             : <button type="button" disabled={pending} onClick={() => submit(v.status)} className="h-12 rounded-xl bg-forest-900 px-5 font-semibold text-cream-50 hover:bg-[#14503F]">Save changes</button>}
         </div>
       </div>

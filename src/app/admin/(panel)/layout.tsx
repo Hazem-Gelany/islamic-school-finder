@@ -13,8 +13,9 @@ export default async function PanelLayout({ children }: { children: React.ReactN
           <NavLink href="/admin/dashboard">Dashboard</NavLink>
           <NavLink href="/admin/schools">Schools</NavLink>
           {can('verification.write') && <NavLink href="/admin/verification">Verification</NavLink>}
-          {can('claims.review') && <NavLink href="/admin/claims">School claims</NavLink>}
           <NavLink href="/admin/translations">Translations</NavLink>
+          {can('claims.review') && <NavLink href="/admin/claims">Claims</NavLink>}
+          {can('schools.write') && <NavLink href="/admin/changes">Change requests</NavLink>}
           {can('imports.manage') && <NavLink href="/admin/import">Import / Export</NavLink>}
           {can('categories.manage') && <NavLink href="/admin/settings/categories">Categories</NavLink>}
           {can('categories.manage') && <NavLink href="/admin/settings/places">Places</NavLink>}

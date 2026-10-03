@@ -88,6 +88,7 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
                     <div className="absolute end-0 z-10 mt-1 w-56 rounded-xl border border-line bg-white p-2 shadow-lg">
                       <Link className="block rounded-lg px-3 py-2 hover:bg-mint-100" href={`/admin/schools/${r.id}`}>Edit</Link>
                       <a className="block rounded-lg px-3 py-2 hover:bg-mint-100" target="_blank" rel="noreferrer" href={`/en/schools/${r.country_slug}/${r.city_slug}/${r.slug}?preview=1`}>Preview public page</a>
+                      {can('claims.review') && <Link className="block rounded-lg px-3 py-2 hover:bg-mint-100" href={`/admin/claims?status=&school=${r.id}`}>Manage claims</Link>}
                       {can('schools.write') && <form action={duplicateSchool}><input type="hidden" name="id" value={r.id} /><button className="block w-full rounded-lg px-3 py-2 text-start hover:bg-mint-100">Duplicate</button></form>}
                       {can('verification.write') && (r.verification_status === 'school_verified'
                         ? <form action={setVerification}><input type="hidden" name="ids" value={r.id} /><input type="hidden" name="status" value="information_checked" /><input type="hidden" name="return" value={ret} /><button className="block w-full rounded-lg px-3 py-2 text-start hover:bg-mint-100">Unverify</button></form>
