@@ -17,7 +17,7 @@ export default async function BulkEdit({ searchParams }: { searchParams: Promise
   const ids = (sp.ids ?? '').split(',').filter((x) => /^[0-9a-f-]{36}$/i.test(x)).slice(0, 100);
   const L = await getLookups(supabase);
   const countryOf = new Map(L.countries.map((c) => [c.id, c.label]));
-  const sel = 'mt-1 block h-11 w-full max-w-md rounded-[10px] border border-[#B9C4BD] bg-white px-3 font-normal';
+  const sel = 'mt-1 block h-11 w-full max-w-md rounded-[10px] border border-[#7F9288] bg-white px-3 font-normal';
   return (
     <>
       <p className="text-sm"><Link href="/admin/schools" className="underline">← Schools</Link></p>

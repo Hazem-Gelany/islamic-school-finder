@@ -26,7 +26,7 @@ export default async function PortalHome({ searchParams }: { searchParams: Promi
             <div><p className="text-lg font-semibold">{s.name}</p>
               <p className="mt-1 flex flex-wrap gap-2"><Badge tone={s.status === 'active' ? 'good' : 'warn'}>{STATUS_LABEL[s.status]}</Badge>{s.pending_requests > 0 && <Badge tone="warn">Changes waiting for review</Badge>}</p></div>
             <div className="flex flex-wrap gap-3">
-              <a href={`/en/schools/${s.country_slug}/${s.city_slug}/${s.slug}`} className="flex h-11 items-center rounded-xl border border-[#B9C4BD] px-5 font-semibold hover:bg-mint-100">View public page</a>
+              <a href={`/en/schools/${s.country_slug}/${s.city_slug}/${s.slug}`} className="flex h-11 items-center rounded-xl border border-[#7F9288] px-5 font-semibold hover:bg-mint-100">View public page</a>
               <Link href={`/portal/schools/${s.id}`} className="flex h-11 items-center rounded-xl bg-forest-900 px-5 font-semibold text-cream-50 hover:bg-[#14503F]">Edit profile</Link>
             </div>
           </li>))}</ul>)}

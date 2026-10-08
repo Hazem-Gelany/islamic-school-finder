@@ -1,14 +1,14 @@
 import { SiteHeader } from '@/components/SiteHeader';
 import { SiteFooter } from '@/components/SiteFooter';
 
-export const fieldCls = 'mt-1.5 h-12 w-full rounded-[10px] border border-[#B9C4BD] bg-white px-3 text-base font-normal text-ink-900';
+export const fieldCls = 'mt-1.5 h-12 w-full rounded-[10px] border border-[#7F9288] bg-white px-3 text-base font-normal text-ink-900';
 export const btnCls = 'h-12 w-full rounded-xl bg-forest-900 font-semibold text-cream-50 hover:bg-[#14503F]';
 
 export function AuthCard({ title, intro, children }: { title: string; intro?: string; children: React.ReactNode }) {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto flex max-w-xl px-6 py-14">
+      <main id="main" tabIndex={-1} className="mx-auto flex max-w-xl px-6 py-14">
         <div className="w-full rounded-2xl border border-line bg-white p-8">
           <h1 className="font-display text-3xl font-medium text-forest-900">{title}</h1>
           {intro && <p className="mt-2 text-muted">{intro}</p>}

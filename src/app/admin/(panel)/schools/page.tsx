@@ -29,7 +29,7 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
     </th>
   );
   const ret = qs({});
-  const field = 'h-11 rounded-[10px] border border-[#B9C4BD] bg-white px-3 text-[15px]';
+  const field = 'h-11 rounded-[10px] border border-[#7F9288] bg-white px-3 text-[15px]';
 
   return (
     <>
@@ -84,7 +84,7 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
                 <td className="px-3 py-3 whitespace-nowrap"><time dateTime={r.updated_at}>{new Date(r.updated_at).toLocaleDateString('en')}</time></td>
                 <td className="px-3 py-3">
                   <details className="relative">
-                    <summary className="flex h-10 cursor-pointer list-none items-center rounded-lg border border-[#B9C4BD] px-3 font-semibold">Actions ▾</summary>
+                    <summary className="flex h-10 cursor-pointer list-none items-center rounded-lg border border-[#7F9288] px-3 font-semibold">Actions ▾</summary>
                     <div className="absolute end-0 z-10 mt-1 w-56 rounded-xl border border-line bg-white p-2 shadow-lg">
                       <Link className="block rounded-lg px-3 py-2 hover:bg-mint-100" href={`/admin/schools/${r.id}`}>Edit</Link>
                       <a className="block rounded-lg px-3 py-2 hover:bg-mint-100" target="_blank" rel="noreferrer" href={`/en/schools/${r.country_slug}/${r.city_slug}/${r.slug}?preview=1`}>Preview public page</a>
@@ -109,9 +109,9 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
       <nav aria-label="Pagination" className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
         <p className="text-muted">{total ? `Showing ${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, total)} of ${total.toLocaleString('en')}` : 'No results'}</p>
         <div className="flex gap-2">
-          {page > 1 ? <Link className="flex h-10 items-center rounded-lg border border-[#B9C4BD] px-4 font-semibold" href={qs({ page: String(page - 1) })}>Previous</Link> : <span className="flex h-10 items-center rounded-lg border border-line px-4 text-muted">Previous</span>}
+          {page > 1 ? <Link className="flex h-10 items-center rounded-lg border border-[#7F9288] px-4 font-semibold" href={qs({ page: String(page - 1) })}>Previous</Link> : <span className="flex h-10 items-center rounded-lg border border-line px-4 text-muted">Previous</span>}
           <span className="flex h-10 items-center px-2">Page {page} of {pages}</span>
-          {page < pages ? <Link className="flex h-10 items-center rounded-lg border border-[#B9C4BD] px-4 font-semibold" href={qs({ page: String(page + 1) })}>Next</Link> : <span className="flex h-10 items-center rounded-lg border border-line px-4 text-muted">Next</span>}
+          {page < pages ? <Link className="flex h-10 items-center rounded-lg border border-[#7F9288] px-4 font-semibold" href={qs({ page: String(page + 1) })}>Next</Link> : <span className="flex h-10 items-center rounded-lg border border-line px-4 text-muted">Next</span>}
         </div>
       </nav>
     </>

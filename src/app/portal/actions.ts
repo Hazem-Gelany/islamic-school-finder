@@ -1,6 +1,6 @@
 'use server';
 import { redirect } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { requireMember } from '@/lib/auth';
 import { friendlyError } from '@/lib/errors';
@@ -26,7 +26,7 @@ export async function submitPortal(schoolId: string | null, raw: unknown): Promi
   // Always sync the proposal: an empty one clears anything the person has since changed back
   const { error: e2 } = await supabase.rpc('submit_change_request', { p_school: schoolId, p_payload: review, p_summary: labels.length ? `Changed: ${[...new Set(labels)].join(', ')}` : null });
   if (e2) return { ok: false, message: e2.hint === 'user_message' ? e2.message : friendlyError(e2, 'Your contact details were published, but we could not send the other changes for review. Please try again.') };
-  revalidatePath(`/portal/schools/${schoolId}`);
+  revalidateTag('schools'); revalidatePath(`/portal/schools/${schoolId}`);
 
   const published = Object.keys(direct).length > 0, sent = Object.keys(review).length > 0;
   const message = published && sent ? 'Your contact details and options are published. Your other changes were sent for review.'

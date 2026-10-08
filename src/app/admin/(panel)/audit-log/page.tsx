@@ -22,7 +22,7 @@ export default async function AuditLogPage({ searchParams }: { searchParams: Pro
       <p className="mb-6 max-w-2xl text-muted">Every important change, with the previous and new value. This log can only be added to, never edited.</p>
       <Flash error={error ? friendlyError(error) : undefined} />
       <form method="get" className="mb-5 flex flex-wrap items-end gap-3">
-        <label className="text-sm font-semibold text-muted">Record type<select name="entity" defaultValue={sp.entity ?? ''} className="mt-1 block h-11 rounded-[10px] border border-[#B9C4BD] bg-white px-3 font-normal">
+        <label className="text-sm font-semibold text-muted">Record type<select name="entity" defaultValue={sp.entity ?? ''} className="mt-1 block h-11 rounded-[10px] border border-[#7F9288] bg-white px-3 font-normal">
           <option value="">All</option>{['schools', 'school_translations', 'school_fees', 'school_media', 'school_curricula', 'school_facilities', 'school_grade_levels', 'school_languages', 'user_roles'].map((e) => <option key={e} value={e}>{e}</option>)}</select></label>
         <button className="h-11 rounded-[10px] border-[1.5px] border-forest-900 px-5 font-semibold text-forest-900 hover:bg-mint-100">Filter</button>
       </form>
@@ -48,7 +48,7 @@ export default async function AuditLogPage({ searchParams }: { searchParams: Pro
       </div>
       <nav aria-label="Pagination" className="mt-4 flex items-center justify-between text-sm">
         <span className="text-muted">Page {page} of {pages}</span>
-        <div className="flex gap-2">{page > 1 && <Link className="flex h-10 items-center rounded-lg border border-[#B9C4BD] px-4 font-semibold" href={link(page - 1)}>Previous</Link>}{page < pages && <Link className="flex h-10 items-center rounded-lg border border-[#B9C4BD] px-4 font-semibold" href={link(page + 1)}>Next</Link>}</div>
+        <div className="flex gap-2">{page > 1 && <Link className="flex h-10 items-center rounded-lg border border-[#7F9288] px-4 font-semibold" href={link(page - 1)}>Previous</Link>}{page < pages && <Link className="flex h-10 items-center rounded-lg border border-[#7F9288] px-4 font-semibold" href={link(page + 1)}>Next</Link>}</div>
       </nav>
     </>
   );

@@ -12,7 +12,7 @@ export default async function VerificationPage({ searchParams }: { searchParams:
   const v = sp.v && sp.v in VERIFICATION_LABEL ? sp.v : 'community_added';
   const { data, error } = await supabase.rpc('admin_list_schools', { p_verification: v, p_sort: 'updated_at', p_dir: 'desc', p_limit: 50, p_offset: 0 });
   const rows = (data ?? []) as Row[];
-  const input = 'h-11 w-full rounded-[10px] border border-[#B9C4BD] px-3 text-[15px]';
+  const input = 'h-11 w-full rounded-[10px] border border-[#7F9288] px-3 text-[15px]';
   return (
     <>
       <h1 className="mb-2 text-3xl font-semibold text-forest-900">Verification</h1>
@@ -21,7 +21,7 @@ export default async function VerificationPage({ searchParams }: { searchParams:
       <nav aria-label="Verification level" className="mb-6 flex flex-wrap gap-2">
         {Object.entries(VERIFICATION_LABEL).map(([k, label]) => (
           <Link key={k} href={`/admin/verification?v=${k}`} aria-current={k === v ? 'page' : undefined}
-            className={`flex h-11 items-center rounded-lg border px-4 font-semibold ${k === v ? 'border-forest-900 bg-forest-900 text-cream-50' : 'border-[#B9C4BD] hover:bg-mint-100'}`}>{label}</Link>
+            className={`flex h-11 items-center rounded-lg border px-4 font-semibold ${k === v ? 'border-forest-900 bg-forest-900 text-cream-50' : 'border-[#7F9288] hover:bg-mint-100'}`}>{label}</Link>
         ))}
       </nav>
       <ul className="space-y-4">

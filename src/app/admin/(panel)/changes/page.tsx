@@ -27,7 +27,7 @@ export default async function ChangesPage({ searchParams }: { searchParams: Prom
       <h1 className="mb-2 text-3xl font-semibold text-forest-900">Change requests</h1>
       <p className="mb-6 max-w-2xl text-muted">School representatives publish contact details themselves. Everything else they change (names, descriptions, fees, location, categories, photos) appears here first. Nothing goes live until you approve it.</p>
       <Flash msg={sp.msg} error={sp.error ?? (error ? friendlyError(error, 'Unable to load requests.') : undefined)} />
-      <nav aria-label="Request status" className="mb-6 flex gap-2">{TABS.map(([k, l]) => <Link key={k} href={`/admin/changes?status=${k}`} aria-current={k === status ? 'page' : undefined} className={`flex h-11 items-center rounded-lg border px-4 font-semibold ${k === status ? 'border-forest-900 bg-forest-900 text-cream-50' : 'border-[#B9C4BD] hover:bg-mint-100'}`}>{l}</Link>)}</nav>
+      <nav aria-label="Request status" className="mb-6 flex gap-2">{TABS.map(([k, l]) => <Link key={k} href={`/admin/changes?status=${k}`} aria-current={k === status ? 'page' : undefined} className={`flex h-11 items-center rounded-lg border px-4 font-semibold ${k === status ? 'border-forest-900 bg-forest-900 text-cream-50' : 'border-[#7F9288] hover:bg-mint-100'}`}>{l}</Link>)}</nav>
       <ul className="space-y-5">
         {reqs.length === 0 && <li className="rounded-2xl border border-line bg-white p-8 text-center text-muted">Nothing here.</li>}
         {reqs.map((r, i) => {
@@ -58,7 +58,7 @@ export default async function ChangesPage({ searchParams }: { searchParams: Prom
                     <li key={m.id} className="overflow-hidden rounded-xl border border-[#E8B4AC]">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={mediaUrl(m.storage_path)} alt={m.alt_text_i18n?.en ?? ''} className="aspect-[4/3] w-full object-cover" /><p className="p-2 text-sm capitalize">{m.kind}</p></li>))}</ul></div>)}
                   <form className="space-y-3 border-t border-line pt-4">
                     <input type="hidden" name="id" value={r.id} /><input type="hidden" name="return" value={ret} />
-                    <label className="block text-sm font-semibold text-muted">Note for the school (required when rejecting)<input name="notes" maxLength={1000} className="mt-1 block h-11 w-full rounded-[10px] border border-[#B9C4BD] px-3 font-normal" /></label>
+                    <label className="block text-sm font-semibold text-muted">Note for the school (required when rejecting)<input name="notes" maxLength={1000} className="mt-1 block h-11 w-full rounded-[10px] border border-[#7F9288] px-3 font-normal" /></label>
                     <div className="flex flex-wrap gap-3">
                       <ConfirmButton message="Publish these changes now?" formAction={approveChange} className="h-11 rounded-xl bg-forest-900 px-5 font-semibold text-cream-50">Approve and publish</ConfirmButton>
                       <ConfirmButton message="Reject these changes?" formAction={rejectChange} className="h-11 rounded-xl border-[1.5px] border-[#B3261E] px-5 font-semibold text-[#8A1F11]">Reject</ConfirmButton>

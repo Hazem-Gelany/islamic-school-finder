@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache';
 import { createAnon } from '@/lib/supabase/anon';
 import { createClient } from '@/lib/supabase/server';
 import type { Candidate } from '@/features/match/engine';
@@ -23,26 +24,47 @@ export type Facet = { slug?: string; code?: string; country?: string; name: I18n
 export type Facets = { countries: Facet[]; cities: Facet[]; curricula: Facet[]; grades: Facet[]; facilities: Facet[]; accreditations: Facet[]; languages: Facet[] };
 const emptyFacets: Facets = { countries: [], cities: [], curricula: [], grades: [], facilities: [], accreditations: [], languages: [] };
 
+// Short-lived caches in front of the database. Any admin change clears everything tagged "schools" (see revalidateTag in flash.ts and the save actions),
+// so an edit is visible straight away; the time limits only bound how stale a read can be if a clear is missed. Failures throw, so they are never cached.
+const CACHE_TAG = ['schools'];
+const cachedSearch = unstable_cache(async (args: ReturnType<typeof toRpc>) => {
+  const { data, error } = await createAnon().rpc('search_schools', args);
+  if (error) throw new Error(`search_schools ${error.code}: ${error.message}`);
+  return (data ?? []) as SchoolRow[];
+}, ['search-schools'], { revalidate: 60, tags: CACHE_TAG });
+
 export async function runSearch(s: Search, locale: string, limit?: number): Promise<{ rows: SchoolRow[]; total: number; error: boolean }> {
   const args = toRpc(s, locale); if (limit) args.p_limit = limit;
-  const { data, error } = await createAnon().rpc('search_schools', args);
-  if (error) { console.error('[search]', error.code, error.message); return { rows: [], total: 0, error: true }; }
-  const rows = (data ?? []) as SchoolRow[];
-  return { rows, total: Number(rows[0]?.total_count ?? 0), error: false };
+  try {
+    const rows = await cachedSearch(args);
+    return { rows, total: Number(rows[0]?.total_count ?? 0), error: false };
+  } catch (e) { console.error('[search]', String(e)); return { rows: [], total: 0, error: true }; }
 }
+
+const cachedFacets = unstable_cache(async () => {
+  const { data, error } = await createAnon().rpc('search_facets');
+  if (error) throw new Error(`search_facets ${error.code}: ${error.message}`);
+  return data as Facets;
+}, ['search-facets'], { revalidate: 300, tags: CACHE_TAG });
 
 export async function getFacets(): Promise<Facets> {
-  const { data, error } = await createAnon().rpc('search_facets');
-  if (error) { console.error('[facets]', error.message); return emptyFacets; }
-  return { ...emptyFacets, ...(data as Facets) };
+  try { return { ...emptyFacets, ...(await cachedFacets()) }; } catch (e) { console.error('[facets]', String(e)); return emptyFacets; }
 }
 
-/** Published schools only. With preview=true, staff sessions can also see drafts (never indexed). */
-export async function getSchoolPublic(country: string, city: string, slug: string, preview = false) {
-  const db = preview ? await createClient() : createAnon();
-  const { data, error } = await db.rpc('get_school_public', { p_country: country, p_city: city, p_slug: slug });
-  if (error) { console.error('[school]', error.message); return null; }
+const cachedSchool = unstable_cache(async (country: string, city: string, slug: string) => {
+  const { data, error } = await createAnon().rpc('get_school_public', { p_country: country, p_city: city, p_slug: slug });
+  if (error) throw new Error(`get_school_public ${error.code}: ${error.message}`);
   return (data as Record<string, any> | null) ?? null;
+}, ['school-public'], { revalidate: 120, tags: CACHE_TAG });
+
+/** Published schools only. With preview=true, staff sessions can also see drafts (never cached, never indexed). */
+export async function getSchoolPublic(country: string, city: string, slug: string, preview = false) {
+  try {
+    if (!preview) return await cachedSchool(country, city, slug);
+    const { data, error } = await (await createClient()).rpc('get_school_public', { p_country: country, p_city: city, p_slug: slug });
+    if (error) throw new Error(error.message);
+    return (data as Record<string, any> | null) ?? null;
+  } catch (e) { console.error('[school]', String(e)); return null; }
 }
 
 /** Self-referencing canonical plus hreflang alternates for every locale. */

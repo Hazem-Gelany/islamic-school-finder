@@ -27,7 +27,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
           <button className="h-10 w-full rounded-lg border border-white/30 hover:bg-white/10">Sign out</button>
         </form>
       </aside>
-      <main className="min-w-0 flex-1 p-5 lg:p-10">{children}</main>
+      <main id="main" tabIndex={-1} className="min-w-0 flex-1 p-5 lg:p-10">{children}</main>
     </div>
   );
 }

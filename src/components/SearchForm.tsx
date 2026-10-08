@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { SearchOptions } from '@/lib/data/searchOptions';
 
-const selectCls = 'h-12 w-full rounded-[10px] border border-[#B9C4BD] bg-white px-3 text-base text-ink-900';
+const selectCls = 'h-12 w-full rounded-[10px] border border-[#7F9288] bg-white px-3 text-base text-ink-900';
 
 function Field({ id, label, children }: { id: string; label: string; children: React.ReactNode }) {
   return (

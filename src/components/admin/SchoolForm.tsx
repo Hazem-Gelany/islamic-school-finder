@@ -7,8 +7,8 @@ import { saveSchool, type SaveResult } from '@/app/admin/(panel)/schools/actions
 import type { Lookups } from '@/lib/data/lookups';
 import { CONTENT_LANGS, SOCIALS, STEPS, slugify, stepOf, toPayload, type V } from './schoolFormModel';
 
-const inputCls = 'h-12 w-full rounded-[10px] border border-[#B9C4BD] bg-white px-3 text-base text-ink-900 aria-[invalid=true]:border-[#B3261E]';
-const areaCls = 'min-h-28 w-full rounded-[10px] border border-[#B9C4BD] bg-white p-3 text-base text-ink-900';
+const inputCls = 'h-12 w-full rounded-[10px] border border-[#7F9288] bg-white px-3 text-base text-ink-900 aria-[invalid=true]:border-[#B3261E]';
+const areaCls = 'min-h-28 w-full rounded-[10px] border border-[#7F9288] bg-white p-3 text-base text-ink-900';
 
 function Field({ label, id, error, hint, children }: { label: string; id: string; error?: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -25,7 +25,7 @@ function Checks<T extends string | number>({ legend, options, value, onChange }:
     <fieldset className="flex flex-col gap-2"><legend className="mb-1 text-sm font-semibold text-muted">{legend}</legend>
       <div className="flex flex-wrap gap-2">{options.map((o) => {
         const on = value.includes(o.id);
-        return <label key={String(o.id)} className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border px-3 ${on ? 'border-forest-900 bg-mint-100 font-semibold' : 'border-[#B9C4BD] bg-white'}`}>
+        return <label key={String(o.id)} className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border px-3 ${on ? 'border-forest-900 bg-mint-100 font-semibold' : 'border-[#7F9288] bg-white'}`}>
           <input type="checkbox" className="size-4" checked={on} onChange={() => onChange(on ? value.filter((x) => x !== o.id) : [...value, o.id])} />{o.label}</label>;
       })}</div>
     </fieldset>
@@ -99,7 +99,7 @@ export function SchoolForm({ schoolId, initial, lookups, canVerify, preview, med
   const LangTabs = (
     <div role="group" aria-label="Content language" className="flex flex-wrap gap-2">
       {CONTENT_LANGS.map(([c, n]) => <button key={c} type="button" aria-pressed={lang === c} onClick={() => setLang(c)}
-        className={`h-11 rounded-lg border px-4 font-semibold ${lang === c ? 'border-forest-900 bg-forest-900 text-cream-50' : 'border-[#B9C4BD] bg-white'}`}>{n}{v.tr[c].name.trim() ? ' ✓' : ''}</button>)}
+        className={`h-11 rounded-lg border px-4 font-semibold ${lang === c ? 'border-forest-900 bg-forest-900 text-cream-50' : 'border-[#7F9288] bg-white'}`}>{n}{v.tr[c].name.trim() ? ' ✓' : ''}</button>)}
     </div>
   );
   const draftish = v.status === 'draft' || v.status === 'pending';
@@ -111,7 +111,7 @@ export function SchoolForm({ schoolId, initial, lookups, canVerify, preview, med
           const n = STEPS[i];
           const bad = Object.keys(errors).some((k) => (k.startsWith('tr.') ? 0 : stepOf(k)) === i);
           return <li key={n}><button type="button" onClick={() => setStep(i)} aria-current={step === i ? 'step' : undefined}
-            className={`flex h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold ${step === i ? 'border-forest-900 bg-forest-900 text-cream-50' : bad ? 'border-[#B3261E] bg-[#FCEDEA] text-[#8A1F11]' : 'border-[#B9C4BD] bg-white'}`}>
+            className={`flex h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold ${step === i ? 'border-forest-900 bg-forest-900 text-cream-50' : bad ? 'border-[#B3261E] bg-[#FCEDEA] text-[#8A1F11]' : 'border-[#7F9288] bg-white'}`}>
             <span className="grid size-6 place-items-center rounded-full bg-white/20 text-xs">{i + 1}</span>{n}{bad && <span className="sr-only"> (has errors)</span>}</button></li>;
         })}
       </ol>
@@ -186,7 +186,7 @@ export function SchoolForm({ schoolId, initial, lookups, canVerify, preview, med
               <Field label="Grade (optional)" id={`fg${i}`}><select id={`fg${i}`} className={inputCls} value={f.grade_level_id} onChange={(e) => set('fees', v.fees.map((x, j) => j === i ? { ...x, grade_level_id: e.target.value } : x))}><option value="">All grades</option>{lookups.gradeLevels.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}</select></Field>
               <Field label="Amount" id={`fa${i}`} error={err(`fees.${i}.amount`)}><input id={`fa${i}`} inputMode="decimal" className={inputCls} value={f.amount} onChange={(e) => set('fees', v.fees.map((x, j) => j === i ? { ...x, amount: e.target.value } : x))} /></Field>
               <Field label="Per" id={`fp${i}`}><select id={`fp${i}`} className={inputCls} value={f.period} onChange={(e) => set('fees', v.fees.map((x, j) => j === i ? { ...x, period: e.target.value } : x))}><option value="year">Year</option><option value="term">Term</option><option value="month">Month</option><option value="one_time">One time</option></select></Field>
-              <button type="button" onClick={() => set('fees', v.fees.filter((_, j) => j !== i))} className="h-12 rounded-lg border border-[#B9C4BD] px-4 font-semibold">Remove</button>
+              <button type="button" onClick={() => set('fees', v.fees.filter((_, j) => j !== i))} className="h-12 rounded-lg border border-[#7F9288] px-4 font-semibold">Remove</button>
             </div>))}
           <button type="button" onClick={() => set('fees', [...v.fees, { fee_category_id: String(lookups.feeCategories.find((c) => c.label === 'Tuition')?.id ?? ''), grade_level_id: '', amount: '', period: 'year' }])} className="h-11 self-start rounded-lg border-[1.5px] border-forest-900 px-4 font-semibold text-forest-900">Add fee</button>
         </div>}
@@ -220,13 +220,13 @@ export function SchoolForm({ schoolId, initial, lookups, canVerify, preview, med
 
       <div className="sticky bottom-0 mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line bg-cream-50 py-4">
         <div className="flex gap-2">
-          <Link href={portal ? '/portal' : '/admin/schools'} className="flex h-12 items-center rounded-xl border border-[#B9C4BD] px-5 font-semibold">{portal ? 'Back to my schools' : 'Cancel'}</Link>
-          <button type="button" disabled={visible.indexOf(step) <= 0} onClick={() => setStep(visible[visible.indexOf(step) - 1])} className="h-12 rounded-xl border border-[#B9C4BD] px-5 font-semibold disabled:opacity-40">Back</button>
+          <Link href={portal ? '/portal' : '/admin/schools'} className="flex h-12 items-center rounded-xl border border-[#7F9288] px-5 font-semibold">{portal ? 'Back to my schools' : 'Cancel'}</Link>
+          <button type="button" disabled={visible.indexOf(step) <= 0} onClick={() => setStep(visible[visible.indexOf(step) - 1])} className="h-12 rounded-xl border border-[#7F9288] px-5 font-semibold disabled:opacity-40">Back</button>
           <button type="button" disabled={visible.indexOf(step) >= visible.length - 1} onClick={() => setStep(visible[visible.indexOf(step) + 1])} className="h-12 rounded-xl border-[1.5px] border-forest-900 px-5 font-semibold text-forest-900 disabled:opacity-40">Next</button>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {pending && <span role="status" className="text-sm text-muted">Saving…</span>}
-          {portal && !preview ? null : preview ? <a href={preview} target="_blank" rel="noreferrer" className="flex h-12 items-center rounded-xl border border-[#B9C4BD] px-5 font-semibold">Preview</a> : <span className="text-xs text-muted">Preview is available after the first save</span>}
+          {portal && !preview ? null : preview ? <a href={preview} target="_blank" rel="noreferrer" className="flex h-12 items-center rounded-xl border border-[#7F9288] px-5 font-semibold">Preview</a> : <span className="text-xs text-muted">Preview is available after the first save</span>}
           {!portal && draftish && <button type="button" disabled={pending} onClick={() => submit('draft')} className="h-12 rounded-xl border-[1.5px] border-forest-900 px-5 font-semibold text-forest-900">Save draft</button>}
           {!portal && draftish ? <button type="button" disabled={pending} onClick={() => submit('active')} className="h-12 rounded-xl bg-forest-900 px-5 font-semibold text-cream-50 hover:bg-[#14503F]">Publish</button>
             : <button type="button" disabled={pending} onClick={() => submit(v.status)} className="h-12 rounded-xl bg-forest-900 px-5 font-semibold text-cream-50 hover:bg-[#14503F]">Save changes</button>}

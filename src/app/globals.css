@@ -16,3 +16,6 @@
 body { background: var(--color-cream-50); color: var(--color-ink-900); font-family: var(--font-sans); }
 [dir="rtl"] body, [dir="rtl"] .font-display { font-family: var(--font-arabic), sans-serif; letter-spacing: 0; }
 :focus-visible { outline: 3px solid var(--color-gold-400); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+main:focus { outline: none; }

@@ -21,7 +21,7 @@ export default async function ClaimsPage({ searchParams }: { searchParams: Promi
       <p className="mb-6 max-w-2xl text-muted">Check that each person really works at the school (their email domain, the evidence link, a call to the school). Approving gives them access to the school portal and marks the school as <b>School managed</b>.</p>
       <Flash msg={sp.msg} error={sp.error ?? (error ? friendlyError(error, 'Unable to load claims.') : undefined)} />
       <nav aria-label="Claim status" className="mb-6 flex flex-wrap gap-2">
-        {TABS.map(([k, l]) => <Link key={l} href={`/admin/claims?status=${k}`} aria-current={k === status ? 'page' : undefined} className={`flex h-11 items-center rounded-lg border px-4 font-semibold ${k === status ? 'border-forest-900 bg-forest-900 text-cream-50' : 'border-[#B9C4BD] hover:bg-mint-100'}`}>{l}</Link>)}
+        {TABS.map(([k, l]) => <Link key={l} href={`/admin/claims?status=${k}`} aria-current={k === status ? 'page' : undefined} className={`flex h-11 items-center rounded-lg border px-4 font-semibold ${k === status ? 'border-forest-900 bg-forest-900 text-cream-50' : 'border-[#7F9288] hover:bg-mint-100'}`}>{l}</Link>)}
       </nav>
       {sp.school && <p className="mb-4 text-sm">Showing one school only. <Link className="underline" href={`/admin/claims?status=${status}`}>Show all</Link></p>}
       <ul className="space-y-4">
@@ -47,7 +47,7 @@ export default async function ClaimsPage({ searchParams }: { searchParams: Promi
             {(c.status === 'pending' || c.status === 'approved') && (
               <form className="mt-4 space-y-3 border-t border-line pt-4">
                 <input type="hidden" name="id" value={c.id} /><input type="hidden" name="return" value={ret} />
-                <label className="block text-sm font-semibold text-muted">Note for the person (required when rejecting or revoking)<input name="notes" maxLength={1000} className="mt-1 block h-11 w-full rounded-[10px] border border-[#B9C4BD] px-3 font-normal" /></label>
+                <label className="block text-sm font-semibold text-muted">Note for the person (required when rejecting or revoking)<input name="notes" maxLength={1000} className="mt-1 block h-11 w-full rounded-[10px] border border-[#7F9288] px-3 font-normal" /></label>
                 <div className="flex flex-wrap gap-3">
                   {c.status === 'pending' ? <>
                     <ConfirmButton message="Approve this claim? They will be able to manage this school." formAction={approve} className="h-11 rounded-xl bg-forest-900 px-5 font-semibold text-cream-50">Approve</ConfirmButton>

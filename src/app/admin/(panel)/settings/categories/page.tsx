@@ -4,7 +4,7 @@ import { ConfirmButton } from '@/components/admin/bits';
 import { CATEGORY_TABLES } from '@/features/settings/constants';
 import { deleteCategory, saveCategory } from './actions';
 
-const inp = 'h-10 w-full rounded-lg border border-[#B9C4BD] px-2 text-[15px]';
+const inp = 'h-10 w-full rounded-lg border border-[#7F9288] px-2 text-[15px]';
 
 export default async function CategoriesPage({ searchParams }: { searchParams: Promise<{ msg?: string; error?: string }> }) {
   const sp = await searchParams;
@@ -37,7 +37,7 @@ export default async function CategoriesPage({ searchParams }: { searchParams: P
                           <input aria-label="Order" name="sort_order" type="number" min={0} defaultValue={r.sort_order} className={inp} />
                           <input aria-label="Active" name="is_active" type="checkbox" defaultChecked={r.is_active} className="size-5 justify-self-center" />
                           <span className="flex gap-2"><button className="h-10 rounded-lg border-[1.5px] border-forest-900 px-3 font-semibold text-forest-900 hover:bg-mint-100">Save</button>
-                            <ConfirmButton message="Delete this item?" formAction={deleteCategory} className="h-10 rounded-lg border border-[#B9C4BD] px-3 hover:bg-[#FCEDEA]">Delete</ConfirmButton></span>
+                            <ConfirmButton message="Delete this item?" formAction={deleteCategory} className="h-10 rounded-lg border border-[#7F9288] px-3 hover:bg-[#FCEDEA]">Delete</ConfirmButton></span>
                         </form>
                       </td>
                     </tr>))}

@@ -21,7 +21,7 @@ export function CompareBar() {
         {items.length >= 2
           ? <Link href={`/compare?schools=${items.map((i) => i.id).join(',')}`} className="flex h-11 items-center rounded-xl bg-forest-900 px-5 font-semibold text-cream-50 hover:bg-[#14503F]">{t('compare')}</Link>
           : <span className="text-sm text-muted">{t('needMore')}</span>}
-        <button type="button" onClick={clear} className="h-11 rounded-xl border border-[#B9C4BD] px-4 font-semibold">{t('clear')}</button>
+        <button type="button" onClick={clear} className="h-11 rounded-xl border border-[#7F9288] px-4 font-semibold">{t('clear')}</button>
       </div>
     </aside>
   );

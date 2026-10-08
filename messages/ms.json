@@ -112,7 +112,8 @@
  "Common": {
   "breadcrumb": "Navigasi jejak",
   "home": "Utama",
-  "schools": "Sekolah"
+  "schools": "Sekolah",
+  "skip": "Langkau ke kandungan utama"
  },
  "Verif": {
   "community_added": "Ditambah komuniti",
@@ -348,7 +349,8 @@
   "resetSent": "Jika akaun wujud untuk alamat ini, pautan tetapan semula sedang dihantar.",
   "sendLink": "Hantar pautan",
   "newPassword": "Kata laluan baharu",
-  "savePassword": "Simpan kata laluan"
+  "savePassword": "Simpan kata laluan",
+  "err_rate": "Terlalu banyak percubaan. Sila tunggu beberapa minit dan cuba lagi."
  },
  "Account": {
   "title": "Akaun saya",
@@ -367,7 +369,18 @@
   "status_rejected": "Tidak diluluskan",
   "status_revoked": "Akses ditamatkan",
   "msg_claimSent": "Tuntutan anda telah dihantar. Kami akan menyemaknya dan mengemas kini status di sini.",
-  "msg_password": "Kata laluan anda telah ditukar."
+  "msg_password": "Kata laluan anda telah ditukar.",
+  "privacyTitle": "Data anda",
+  "privacyText": "Muat turun salinan semua yang dikaitkan dengan akaun anda, atau padam akaun anda.",
+  "download": "Muat turun data saya",
+  "deleteTitle": "Padam akaun saya",
+  "deleteText": "Ini memadam akaun, tuntutan dan item tersimpan anda secara kekal. Sekolah yang anda sunting mengekalkan maklumat mereka. Tindakan ini tidak boleh dibatalkan.",
+  "deleteConfirm": "Taip DELETE untuk mengesahkan",
+  "deleteButton": "Padam akaun saya secara kekal",
+  "err_confirm": "Taip DELETE untuk mengesahkan anda mahu memadam akaun anda.",
+  "err_rate": "Terlalu banyak percubaan. Sila cuba lagi nanti.",
+  "err_lastAdmin": "Ini akaun Super Admin terakhir. Berikan peranan itu kepada orang lain dahulu.",
+  "err_unavailable": "Kami tidak dapat memadam akaun anda sekarang. Sila cuba lagi atau hubungi kami."
  },
  "Claim": {
   "title": "Tuntut sekolah anda",
@@ -398,5 +411,80 @@
   "err_duplicate": "Anda sudah mempunyai tuntutan yang menunggu semakan untuk sekolah ini.",
   "err_unavailable": "Sekolah ini tidak boleh dituntut sekarang. Sila cuba lagi nanti.",
   "err_limit": "Kami tidak dapat menerima tuntutan ini."
+ },
+ "Errors": {
+  "title": "Sesuatu tidak kena",
+  "text": "Kami tidak dapat memuatkan halaman ini. Sila cuba lagi.",
+  "reference": "Rujukan",
+  "retry": "Cuba lagi",
+  "home": "Pergi ke laman utama",
+  "notFoundTitle": "Kami tidak menjumpai halaman itu",
+  "notFoundText": "Halaman mungkin telah dipindahkan, atau sekolah tidak lagi disenaraikan.",
+  "browse": "Semak sekolah"
+ },
+ "About": {
+  "title": "Tentang Pencari Sekolah Islam",
+  "intro": "Kami membantu keluarga mencari, membandingkan dan menghubungi sekolah Islam di seluruh dunia dengan maklumat yang jelas dan jujur.",
+  "sections": [
+   {
+    "h": "Apa yang kami lakukan",
+    "p": "Setiap sekolah mempunyai satu profil dengan kurikulum, program Al-Quran dan Bahasa Arab, yuran, kemudahan dan kemasukan. Profil tersedia dalam bahasa Inggeris, Arab dan Melayu."
+   },
+   {
+    "h": "Cara kami memastikan maklumat boleh dipercayai",
+    "p": "Setiap profil memaparkan tahap pengesahan, dari ditambah komuniti hingga diurus sekolah, supaya anda tahu setakat mana butiran telah disemak. Sekolah boleh menuntut profil mereka dan mengemas kininya; perubahan pada butiran penting disemak oleh pasukan kami sebelum dipaparkan."
+   },
+   {
+    "h": "Cara padanan berfungsi",
+    "p": "Kami tidak meletakkan sekolah mengikut kualiti. Apabila anda memberitahu apa yang penting untuk keluarga anda, kami tunjukkan berapa banyak keutamaan yang dipenuhi setiap sekolah dan yang mana, supaya anda boleh membuat keputusan sendiri."
+   }
+  ]
+ },
+ "Contact": {
+  "title": "Hubungi kami",
+  "intro": "Soalan, pembetulan atau cadangan? Kami ingin mendengar daripada anda.",
+  "sections": [
+   {
+    "h": "Betulkan atau tambah sekolah",
+    "p": "Jika anda perasan sesuatu yang salah pada halaman sekolah, atau sesebuah sekolah tiada, tulis kepada kami dengan nama dan bandar sekolah itu."
+   },
+   {
+    "h": "Permintaan data dan privasi",
+    "p": "Anda boleh memuat turun atau memadam data anda sendiri daripada halaman akaun. Untuk perkara lain berkaitan data anda, e-mel kami."
+   }
+  ],
+  "emailUs": "E-mel",
+  "claimHint": "Adakah anda bekerja di sekolah?",
+  "claimLink": "Tuntut profil sekolah anda."
+ },
+ "Privacy": {
+  "title": "Privasi",
+  "intro": "Kami mengumpul maklumat peribadi sesedikit mungkin. Halaman ini menerangkan apa yang kami simpan dan sebabnya. (Notis draf: sila semak dengan peguam untuk negara anda sebelum pelancaran.)",
+  "sections": [
+   {
+    "h": "Melayari",
+    "p": "Anda boleh melayari, mencari dan membandingkan sekolah tanpa akaun. Senarai perbandingan disimpan dalam pelayar anda sahaja. Kami tidak menggunakan kuki iklan atau penjejakan."
+   },
+   {
+    "h": "Akaun",
+    "p": "Jika anda mencipta akaun, kami menyimpan nama, alamat e-mel dan tuntutan yang anda hantar. Kami menggunakan kuki penting untuk mengekalkan log masuk anda. Kakitangan dan wakil sekolah turut direkodkan dalam log audit apabila mereka menukar maklumat."
+   },
+   {
+    "h": "Apa yang kami simpan untuk keselamatan",
+    "p": "Untuk menghalang penyalahgunaan, kami mengira permintaan secara ringkas bagi setiap alamat internet dan akaun, contohnya percubaan log masuk. Pembilang ini dipadam selepas sehari. Pelayan kami menyimpan log teknikal jangka pendek."
+   },
+   {
+    "h": "Perkhidmatan lain",
+    "p": "Penyedia pengehosan dan pangkalan data kami memproses data bagi pihak kami. Halaman sekolah mungkin memaparkan peta daripada OpenStreetMap, yang menerima alamat internet anda seperti mana-mana laman web yang anda lawati."
+   },
+   {
+    "h": "Kanak-kanak",
+    "p": "Kami tidak meminta maklumat tentang kanak-kanak. Akaun adalah untuk ibu bapa, penjaga dan kakitangan sekolah."
+   },
+   {
+    "h": "Hak anda",
+    "p": "Anda boleh memuat turun semua data yang dikaitkan dengan akaun anda, atau memadam akaun anda secara kekal, daripada halaman akaun. Anda juga boleh meminta pembetulan atau pemadaman data melalui e-mel."
+   }
+  ]
  }
 }

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { routing } from '@/i18n/routing';
 import { safeNext } from '@/lib/safeNext';
+import { isLimited } from '@/lib/rateLimit';
 
 export async function submitClaim(fd: FormData) {
   const l = (routing.locales as readonly string[]).includes(String(fd.get('locale'))) ? String(fd.get('locale')) : 'en';
@@ -17,6 +18,7 @@ export async function submitClaim(fd: FormData) {
     message: z.string().trim().max(2000), evidence_url: z.string().trim().url().refine((u) => /^https?:\/\//i.test(u)).or(z.literal('')),
   }).safeParse(Object.fromEntries(['school_id', 'job_title', 'contact_email', 'message', 'evidence_url'].map((k) => [k, fd.get(k) ?? ''])));
   if (!p.success) return back('invalid');
+  if (await isLimited([[`claim:user:${user.id}`, 10, 3600]])) return back('limit', 'Too many claim requests. Please try again later.');
   const { error } = await supabase.from('school_claims').insert({ ...p.data, evidence_url: p.data.evidence_url || null, message: p.data.message || null, user_id: user.id });
   if (error) {
     console.error('[claim]', error.code, error.message);

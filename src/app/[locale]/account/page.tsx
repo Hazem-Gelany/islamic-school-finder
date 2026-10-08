@@ -6,9 +6,9 @@ import { SiteHeader } from '@/components/SiteHeader';
 import { SiteFooter } from '@/components/SiteFooter';
 import { Notice } from '@/components/auth/AuthCard';
 import { createClient } from '@/lib/supabase/server';
-import { signOut } from '@/features/auth/actions';
+import { deleteAccount, signOut } from '@/features/auth/actions';
 
-type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ msg?: string }> };
+type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ msg?: string; error?: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> { const { locale } = await params; return { title: (await getTranslations({ locale, namespace: 'Account' }))('title'), robots: { index: false } }; }
 
 export default async function AccountPage({ params, searchParams }: Props) {
@@ -26,13 +26,14 @@ export default async function AccountPage({ params, searchParams }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto max-w-3xl space-y-6 px-6 py-12">
+      <main id="main" tabIndex={-1} className="mx-auto max-w-3xl space-y-6 px-6 py-12">
         <h1 className="font-display text-4xl font-medium text-forest-900">{t('title')}</h1>
+        {sp.error && <Notice tone="err">{t(`err_${['confirm', 'rate', 'lastAdmin'].includes(sp.error) ? sp.error : 'unavailable'}` as never)}</Notice>}
         {sp.msg && <Notice tone="ok">{t(`msg_${sp.msg === 'password' ? 'password' : 'claimSent'}` as never)}</Notice>}
         <section className={sec}>
           <p className="text-sm text-muted">{t('signedInAs')}</p>
           <p className="text-lg font-semibold">{profile.data?.display_name ?? user.email}</p><p className="text-muted">{user.email}</p>
-          <form action={signOut} className="mt-4"><input type="hidden" name="locale" value={locale} /><button className="h-11 rounded-xl border border-[#B9C4BD] px-5 font-semibold hover:bg-mint-100">{t('signOut')}</button></form>
+          <form action={signOut} className="mt-4"><input type="hidden" name="locale" value={locale} /><button className="h-11 rounded-xl border border-[#7F9288] px-5 font-semibold hover:bg-mint-100">{t('signOut')}</button></form>
         </section>
         <section aria-labelledby="sch" className={sec}>
           <h2 id="sch" className="mb-3 font-display text-2xl font-semibold">{t('schoolsTitle')}</h2>
@@ -56,6 +57,20 @@ export default async function AccountPage({ params, searchParams }: Props) {
                 <p className="text-sm text-muted"><time dateTime={c.created_at}>{new Date(c.created_at).toLocaleDateString(locale)}</time></p>
                 {c.review_notes && c.status !== 'pending' && <p className="mt-2 text-sm"><span className="font-semibold">{t('reviewerNote')}:</span> {c.review_notes}</p>}
               </li>))}</ul>)}
+        </section>
+        <section aria-labelledby="priv" className={sec}>
+          <h2 id="priv" className="mb-2 font-display text-2xl font-semibold">{t('privacyTitle')}</h2>
+          <p className="text-muted">{t('privacyText')}</p>
+          <a href={`/${locale}/account/export`} download className="mt-3 inline-flex h-11 items-center rounded-xl border-[1.5px] border-forest-900 px-5 font-semibold text-forest-900 hover:bg-mint-100">{t('download')}</a>
+          <details className="mt-6 rounded-xl border border-[#E8B4AC] p-4">
+            <summary className="cursor-pointer font-semibold text-[#8A1F11]">{t('deleteTitle')}</summary>
+            <p className="mt-3 text-muted">{t('deleteText')}</p>
+            <form action={deleteAccount} className="mt-4 flex flex-wrap items-end gap-3">
+              <input type="hidden" name="locale" value={locale} />
+              <label className="text-sm font-semibold text-muted">{t('deleteConfirm')}<input name="confirm" autoComplete="off" required className="mt-1 block h-11 w-40 rounded-[10px] border border-[#7F9288] px-3 font-normal uppercase" /></label>
+              <button className="h-11 rounded-xl bg-[#8A1F11] px-5 font-semibold text-white">{t('deleteButton')}</button>
+            </form>
+          </details>
         </section>
       </main>
       <SiteFooter />

@@ -24,7 +24,7 @@ export default async function UsersPage({ searchParams }: { searchParams: Promis
       <Flash msg={sp.msg} error={sp.error ?? (error ? friendlyError(error, 'Unable to load users.') : undefined)} />
       <form method="get" role="search" className="mb-5 flex gap-3">
         <label className="sr-only" htmlFor="uq">Search users</label>
-        <input id="uq" name="q" defaultValue={sp.q} placeholder="Search by email or name" className="h-11 w-72 rounded-[10px] border border-[#B9C4BD] px-3" />
+        <input id="uq" name="q" defaultValue={sp.q} placeholder="Search by email or name" className="h-11 w-72 rounded-[10px] border border-[#7F9288] px-3" />
         <button className="h-11 rounded-[10px] border-[1.5px] border-forest-900 px-5 font-semibold text-forest-900 hover:bg-mint-100">Search</button>
       </form>
       <ul className="space-y-3">
@@ -48,7 +48,7 @@ export default async function UsersPage({ searchParams }: { searchParams: Promis
           </li>))}
       </ul>
       <nav aria-label="Pagination" className="mt-5 flex items-center justify-between text-sm"><span className="text-muted">{total.toLocaleString('en')} users · page {page} of {pages}</span>
-        <span className="flex gap-2">{page > 1 && <Link className="flex h-10 items-center rounded-lg border border-[#B9C4BD] px-4 font-semibold" href={link(page - 1)}>Previous</Link>}{page < pages && <Link className="flex h-10 items-center rounded-lg border border-[#B9C4BD] px-4 font-semibold" href={link(page + 1)}>Next</Link>}</span></nav>
+        <span className="flex gap-2">{page > 1 && <Link className="flex h-10 items-center rounded-lg border border-[#7F9288] px-4 font-semibold" href={link(page - 1)}>Previous</Link>}{page < pages && <Link className="flex h-10 items-center rounded-lg border border-[#7F9288] px-4 font-semibold" href={link(page + 1)}>Next</Link>}</span></nav>
     </>
   );
 }

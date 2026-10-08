@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { Fraunces, Figtree, IBM_Plex_Sans_Arabic } from 'next/font/google';
 import { CompareBar } from '@/components/public/CompareBar';
 import { routing, dirFor } from '@/i18n/routing';
@@ -18,9 +19,12 @@ export const metadata: Metadata = {
 export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+  const skip = (await getTranslations({ locale, namespace: 'Common' }))('skip');
   return (
     <html lang={locale} dir={dirFor(locale)} className={`${fraunces.variable} ${figtree.variable} ${arabic.variable}`}>
-      <body><NextIntlClientProvider>{children}<CompareBar /></NextIntlClientProvider></body>
+      <body>
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-gold-400 focus:px-4 focus:py-3 focus:font-semibold focus:text-forest-900">{skip}</a>
+        <NextIntlClientProvider>{children}<CompareBar /></NextIntlClientProvider></body>
     </html>
   );
 }

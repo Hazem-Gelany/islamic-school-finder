@@ -40,7 +40,7 @@ export default async function PortalSchool({ params, searchParams }: { params: P
       <p className="text-sm"><Link href="/portal" className="underline">← My schools</Link></p>
       <div className="mb-4 mt-1 flex flex-wrap items-start justify-between gap-3">
         <div><h1 className="text-3xl font-semibold text-forest-900">{name}</h1><p className="mt-2 flex flex-wrap gap-2"><Badge tone={rec.status === 'active' ? 'good' : 'warn'}>{STATUS_LABEL[rec.status]}</Badge>{pending && <Badge tone="warn">Changes waiting for review</Badge>}</p></div>
-        {country && city && <a href={`/en/schools/${country}/${city}/${rec.slug}`} target="_blank" rel="noreferrer" className="flex h-11 items-center rounded-xl border border-[#B9C4BD] px-5 font-semibold hover:bg-mint-100">View public page</a>}
+        {country && city && <a href={`/en/schools/${country}/${city}/${rec.slug}`} target="_blank" rel="noreferrer" className="flex h-11 items-center rounded-xl border border-[#7F9288] px-5 font-semibold hover:bg-mint-100">View public page</a>}
       </div>
       <Flash msg={sp.msg} error={sp.error} />
       {decided?.status === 'rejected' && !pending && <div role="note" className="mb-4 rounded-xl bg-[#FCEDEA] p-4 text-[#8A1F11]"><b>Your last changes were not approved.</b> {decided.review_notes}</div>}
@@ -53,7 +53,7 @@ export default async function PortalSchool({ params, searchParams }: { params: P
         <form action={withdrawChanges} className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#E2B95B] bg-[#FFFBEF] p-4">
           <input type="hidden" name="id" value={id} />
           <p className="text-sm">{pending.summary ?? 'You have changes waiting for review.'} Saving again updates them.</p>
-          <ConfirmButton message="Withdraw all pending changes, including uploaded photos?" className="h-10 rounded-lg border border-[#B9C4BD] bg-white px-4 font-semibold">Withdraw pending changes</ConfirmButton>
+          <ConfirmButton message="Withdraw all pending changes, including uploaded photos?" className="h-10 rounded-lg border border-[#7F9288] bg-white px-4 font-semibold">Withdraw pending changes</ConfirmButton>
         </form>)}
       <SchoolForm mode="portal" schoolId={id} initial={fromRecord(merged)} lookups={lookups} canVerify={false} submitAction={submitPortal}
         mediaSlot={<PortalMedia schoolId={id} published={media} pendingAdd={pendingAdd} pendingRemove={pending?.media?.remove ?? []} />} />

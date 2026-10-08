@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import type { Facet, Facets } from '@/lib/data/public';
 import type { Search } from '@/features/search/params';
 
-const sel = 'h-11 w-full rounded-[10px] border border-[#B9C4BD] bg-white px-3 text-[15px] text-ink-900';
+const sel = 'h-11 w-full rounded-[10px] border border-[#7F9288] bg-white px-3 text-[15px] text-ink-900';
 const label = (f: Facet, locale: string) => (typeof f.name === 'string' ? f.name : f.name[locale] || f.name.en);
 const key = (f: Facet) => (f.code ?? f.slug)!;
 
@@ -63,7 +63,7 @@ export function Filters({ facets, values, q, sort, mode = 'search' }: { facets: 
               <select id="radius" name="radius" defaultValue={String(values.radius ?? 25)} className={`${sel} mt-1`}>{[5, 10, 25, 50, 100].map((r) => <option key={r} value={r}>{r} km</option>)}</select>
               <button type="button" onClick={() => setPoint(null)} className="mt-2 min-h-9 text-sm underline">{t('clearLocation')}</button>
             </>
-          ) : <button type="button" onClick={locate} className="min-h-11 w-full rounded-lg border border-[#B9C4BD] bg-white font-semibold">{geo === 'busy' ? t('locating') : t('nearMe')}</button>}
+          ) : <button type="button" onClick={locate} className="min-h-11 w-full rounded-lg border border-[#7F9288] bg-white font-semibold">{geo === 'busy' ? t('locating') : t('nearMe')}</button>}
           {geo === 'denied' && <p role="status" className="mt-2 text-sm text-[#8A1F11]">{t('locationDenied')}</p>}
         </div>
       </Group>

@@ -83,7 +83,7 @@ export default async function SchoolPage({ params, searchParams }: Props) {
     <>
       <SiteHeader />
       {preview && <p role="status" className="bg-gold-400 px-6 py-2 text-center text-sm font-semibold text-forest-900">{t('previewBanner')}</p>}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json(ld) }} />
+      {ld.map((o, i) => <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: json(o) }} />)}
       <div className="bg-forest-900 pb-10 pt-6 text-cream-50">
         <div className="mx-auto max-w-7xl px-6 lg:px-16">
           <Breadcrumbs items={[{ label: tc('home'), href: '/' }, { label: tc('schools'), href: '/schools' }, { label: countryName, href: `/schools/${country}` }, { label: cityName, href: `/schools/${country}/${city}` }, { label: c.name ?? '' }]} />
@@ -98,7 +98,7 @@ export default async function SchoolPage({ params, searchParams }: Props) {
         </div>
       </div>
 
-      <main className="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[1fr_340px] lg:px-16">
+      <main id="main" tabIndex={-1} className="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[1fr_340px] lg:px-16">
         <div className="flex min-w-0 flex-col gap-6">
           {fallback && <p role="note" className="rounded-xl bg-[#FBF0D9] p-3 text-sm text-bronze">{t('fallbackNote', { language: lang.toUpperCase() })}</p>}
           {photos.length > 0 && (

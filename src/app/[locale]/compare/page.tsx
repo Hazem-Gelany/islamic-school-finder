@@ -51,7 +51,7 @@ export default async function ComparePage({ params, searchParams }: Props) {
         <Breadcrumbs items={[{ label: tc('home'), href: '/' }, { label: t('title') }]} />
         <h1 className="mt-4 font-display text-4xl font-medium tracking-tight lg:text-5xl">{t('title')}</h1>
       </div></div>
-      <main className="mx-auto max-w-7xl px-6 py-10 lg:px-16">
+      <main id="main" tabIndex={-1} className="mx-auto max-w-7xl px-6 py-10 lg:px-16">
         {schools.length < 2 ? (
           <div className="rounded-2xl border border-line bg-white p-10 text-center">
             <p className="font-display text-2xl font-semibold">{schools.length === 0 ? t('empty') : t('needTwo')}</p>

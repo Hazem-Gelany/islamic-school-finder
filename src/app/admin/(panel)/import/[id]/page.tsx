@@ -32,7 +32,7 @@ export default async function ImportReport({ params, searchParams }: { params: P
             <ConfirmButton message={`Import ${job.valid_rows} schools now? All of them are saved together, or none if anything fails.`} className="h-12 rounded-xl bg-forest-900 px-6 font-semibold text-cream-50 hover:bg-[#14503F]">Import {job.valid_rows} schools</ConfirmButton></form>}
           {!canCommit && <p className="text-muted">There are no valid rows to import. Fix the file and upload it again.</p>}
           {(job.duplicate_rows > 0 || job.invalid_rows > 0) && <a href={`/admin/import/${id}/issues`} className="flex h-12 items-center rounded-xl border-[1.5px] border-forest-900 px-5 font-semibold text-forest-900 hover:bg-mint-100">Download problems (CSV)</a>}
-          <form action={discardImport}><input type="hidden" name="id" value={id} /><ConfirmButton message="Discard this import?" className="h-12 rounded-xl border border-[#B9C4BD] px-5 font-semibold">Discard</ConfirmButton></form>
+          <form action={discardImport}><input type="hidden" name="id" value={id} /><ConfirmButton message="Discard this import?" className="h-12 rounded-xl border border-[#7F9288] px-5 font-semibold">Discard</ConfirmButton></form>
         </div>)}
       {committed && <Link href="/admin/schools" className="mb-8 inline-flex h-12 items-center rounded-xl bg-forest-900 px-6 font-semibold text-cream-50">View schools</Link>}
       <section aria-labelledby="issues">

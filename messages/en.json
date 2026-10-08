@@ -112,7 +112,8 @@
  "Common": {
   "breadcrumb": "Breadcrumb",
   "home": "Home",
-  "schools": "Schools"
+  "schools": "Schools",
+  "skip": "Skip to main content"
  },
  "Verif": {
   "community_added": "Community added",
@@ -348,7 +349,8 @@
   "resetSent": "If an account exists for this address, a reset link is on its way.",
   "sendLink": "Send reset link",
   "newPassword": "New password",
-  "savePassword": "Save password"
+  "savePassword": "Save password",
+  "err_rate": "Too many attempts. Please wait a few minutes and try again."
  },
  "Account": {
   "title": "My account",
@@ -367,7 +369,18 @@
   "status_rejected": "Not approved",
   "status_revoked": "Access ended",
   "msg_claimSent": "Your claim was sent. We will review it and update the status here.",
-  "msg_password": "Your password was changed."
+  "msg_password": "Your password was changed.",
+  "privacyTitle": "Your data",
+  "privacyText": "Download a copy of everything linked to your account, or delete your account.",
+  "download": "Download my data",
+  "deleteTitle": "Delete my account",
+  "deleteText": "This permanently deletes your account, your claims and your saved items. Schools you edited keep their information. This cannot be undone.",
+  "deleteConfirm": "Type DELETE to confirm",
+  "deleteButton": "Delete my account permanently",
+  "err_confirm": "Type DELETE to confirm that you want to delete your account.",
+  "err_rate": "Too many attempts. Please try again later.",
+  "err_lastAdmin": "This is the last Super Admin account. Give another person that role first.",
+  "err_unavailable": "We could not delete your account right now. Please try again or contact us."
  },
  "Claim": {
   "title": "Claim your school",
@@ -398,5 +411,80 @@
   "err_duplicate": "You already have a claim waiting for review for this school.",
   "err_unavailable": "This school cannot be claimed right now. Please try again later.",
   "err_limit": "We could not accept this claim."
+ },
+ "Errors": {
+  "title": "Something went wrong",
+  "text": "We could not load this page. Please try again.",
+  "reference": "Reference",
+  "retry": "Try again",
+  "home": "Go to the homepage",
+  "notFoundTitle": "We could not find that page",
+  "notFoundText": "The page may have moved, or the school may no longer be listed.",
+  "browse": "Browse schools"
+ },
+ "About": {
+  "title": "About Islamic School Finder",
+  "intro": "We help families find, compare and contact Islamic schools around the world, with clear and honest information.",
+  "sections": [
+   {
+    "h": "What we do",
+    "p": "Every school has one profile with its curriculum, Quran and Arabic programmes, fees, facilities and admissions. Profiles are available in English, Arabic and Malay."
+   },
+   {
+    "h": "How we keep information reliable",
+    "p": "Each profile shows a verification level, from community added to school managed, so you can see how far the details have been checked. Schools can claim their profile and keep it up to date; changes to important details are reviewed by our team before they appear."
+   },
+   {
+    "h": "How matching works",
+    "p": "We do not rank schools by quality. When you tell us what matters to your family, we show how many of your preferences each school meets, and which ones, so you can decide for yourself."
+   }
+  ]
+ },
+ "Contact": {
+  "title": "Contact us",
+  "intro": "Questions, corrections or suggestions? We would like to hear from you.",
+  "sections": [
+   {
+    "h": "Correct or add a school",
+    "p": "If you notice something wrong on a school's page, or a school is missing, write to us with the school's name and city."
+   },
+   {
+    "h": "Data and privacy requests",
+    "p": "You can download or delete your own data from your account page. For anything else about your data, email us."
+   }
+  ],
+  "emailUs": "Email",
+  "claimHint": "Do you work at a school?",
+  "claimLink": "Claim your school's profile."
+ },
+ "Privacy": {
+  "title": "Privacy",
+  "intro": "We collect as little personal information as we can. This page explains what we hold and why. (Draft notice: have it reviewed by a lawyer for your country before launch.)",
+  "sections": [
+   {
+    "h": "Browsing",
+    "p": "You can browse, search and compare schools without an account. Your compare list is kept only in your own browser. We do not use advertising or tracking cookies."
+   },
+   {
+    "h": "Accounts",
+    "p": "If you create an account we store your name, email address and the claims you send. We use essential cookies to keep you signed in. Staff and school representatives are also recorded in an audit log when they change information."
+   },
+   {
+    "h": "What we keep for security",
+    "p": "To stop abuse we briefly count requests per internet address and per account, for example sign-in attempts. These counters are deleted after a day. Our servers keep short-lived technical logs."
+   },
+   {
+    "h": "Other services",
+    "p": "Our hosting and database providers process data on our behalf. School pages may show a map from OpenStreetMap, which then receives your internet address like any website you visit."
+   },
+   {
+    "h": "Children",
+    "p": "We do not ask for information about children. Accounts are for parents, guardians and school staff."
+   },
+   {
+    "h": "Your rights",
+    "p": "You can download all the data linked to your account, or permanently delete your account, from the account page. You can also ask us to correct or erase data by email."
+   }
+  ]
  }
 }

@@ -1,6 +1,6 @@
 'use server';
 import { redirect } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { requirePermission } from '@/lib/auth';
 import { friendlyError } from '@/lib/errors';
@@ -24,7 +24,7 @@ export async function saveSchool(id: string | null, raw: unknown, confirmDuplica
   }
   const { data, error } = await supabase.rpc('save_school', { p_id: id, p });
   if (error) return { ok: false, message: friendlyError(error, 'Unable to save the school. Please try again.') };
-  revalidatePath('/admin/schools'); revalidatePath('/admin/dashboard');
+  revalidateTag('schools'); revalidatePath('/admin/schools'); revalidatePath('/admin/dashboard');
   return { ok: true, id: data as string };
 }
 
@@ -109,7 +109,7 @@ export async function addMedia(input: { school_id: string; kind: 'logo' | 'photo
   if (input.kind === 'logo') await supabase.from('school_media').delete().eq('school_id', input.school_id).eq('kind', 'logo');
   const { error } = await supabase.from('school_media').insert({ school_id: input.school_id, kind: input.kind, storage_path: input.storage_path, mime_type: input.mime_type, size_bytes: input.size_bytes, alt_text_i18n: { en: ok.data.alt } });
   if (error) return { ok: false as const, message: friendlyError(error, 'Unable to save the image.') };
-  revalidatePath(`/admin/schools/${input.school_id}`);
+  revalidateTag('schools'); revalidatePath(`/admin/schools/${input.school_id}`);
   return { ok: true as const };
 }
 
@@ -119,7 +119,7 @@ export async function removeMedia(mediaId: string, schoolId: string) {
   const { error } = await supabase.from('school_media').delete().eq('id', mediaId).eq('school_id', schoolId);
   if (error) return { ok: false as const, message: friendlyError(error) };
   if (m?.storage_path) await supabase.storage.from('school-media').remove([m.storage_path]);
-  revalidatePath(`/admin/schools/${schoolId}`);
+  revalidateTag('schools'); revalidatePath(`/admin/schools/${schoolId}`);
   return { ok: true as const };
 }
 

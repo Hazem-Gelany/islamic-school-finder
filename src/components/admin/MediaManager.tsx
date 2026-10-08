@@ -42,8 +42,8 @@ export function MediaManager({ schoolId, items }: { schoolId: string; items: Med
     <div className="grid gap-6">
       <div className="grid gap-4 rounded-xl border border-line p-4 md:grid-cols-[1fr_160px_1fr_auto] md:items-end">
         <label className="text-sm font-semibold text-muted">Image file (max 5 MB)<input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/avif" className="mt-1 block w-full text-base font-normal" /></label>
-        <label className="text-sm font-semibold text-muted">Type<select value={kind} onChange={(e) => setKind(e.target.value as 'logo' | 'photo')} className="mt-1 block h-12 w-full rounded-[10px] border border-[#B9C4BD] bg-white px-3 font-normal"><option value="photo">Photo</option><option value="logo">Logo (replaces current)</option></select></label>
-        <label className="text-sm font-semibold text-muted">Alt text<input value={alt} onChange={(e) => setAlt(e.target.value)} maxLength={200} placeholder="Describe the image" className="mt-1 block h-12 w-full rounded-[10px] border border-[#B9C4BD] px-3 font-normal" /></label>
+        <label className="text-sm font-semibold text-muted">Type<select value={kind} onChange={(e) => setKind(e.target.value as 'logo' | 'photo')} className="mt-1 block h-12 w-full rounded-[10px] border border-[#7F9288] bg-white px-3 font-normal"><option value="photo">Photo</option><option value="logo">Logo (replaces current)</option></select></label>
+        <label className="text-sm font-semibold text-muted">Alt text<input value={alt} onChange={(e) => setAlt(e.target.value)} maxLength={200} placeholder="Describe the image" className="mt-1 block h-12 w-full rounded-[10px] border border-[#7F9288] px-3 font-normal" /></label>
         <button type="button" disabled={busy} onClick={upload} className="h-12 rounded-xl bg-forest-900 px-5 font-semibold text-cream-50 disabled:opacity-50">{busy ? 'Working…' : 'Upload'}</button>
       </div>
       {msg && <p role={msg.tone === 'err' ? 'alert' : 'status'} className={`rounded-lg p-3 text-sm ${msg.tone === 'err' ? 'bg-[#FCEDEA] text-[#8A1F11]' : 'bg-mint-100 text-forest-900'}`}>{msg.text}</p>}
@@ -53,7 +53,7 @@ export function MediaManager({ schoolId, items }: { schoolId: string; items: Med
             <li key={m.id} className="overflow-hidden rounded-xl border border-line">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={m.url} alt={m.alt} loading="lazy" className="aspect-[4/3] w-full bg-[#F6F4EC] object-cover" />
-              <div className="flex items-center justify-between gap-2 p-2 text-sm"><span className="font-semibold capitalize">{m.kind}</span><button type="button" onClick={() => remove(m.id)} className="h-9 rounded-lg border border-[#B9C4BD] px-3">Remove</button></div>
+              <div className="flex items-center justify-between gap-2 p-2 text-sm"><span className="font-semibold capitalize">{m.kind}</span><button type="button" onClick={() => remove(m.id)} className="h-9 rounded-lg border border-[#7F9288] px-3">Remove</button></div>
             </li>))}
         </ul>)}
     </div>

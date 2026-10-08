@@ -15,7 +15,7 @@ export default async function RegisterPage({ params, searchParams }: Props) {
   if (sp.sent) return <AuthCard title={t('registerTitle')}><Notice tone="ok">{t('registerSent')}</Notice><Link className="underline" href="/login">{t('signIn')}</Link></AuthCard>;
   return (
     <AuthCard title={t('registerTitle')} intro={t('registerIntro')}>
-      {sp.error && <Notice tone="err">{t(`err_${['weak', 'invalid'].includes(sp.error) ? sp.error : 'generic'}` as never)}</Notice>}
+      {sp.error && <Notice tone="err">{t(`err_${['weak', 'invalid', 'rate'].includes(sp.error) ? sp.error : 'generic'}` as never)}</Notice>}
       <form action={signUp} className="space-y-5">
         <input type="hidden" name="locale" value={locale} /><input type="hidden" name="next" value={next} />
         <label className="block text-sm font-semibold text-muted">{t('displayName')}<input name="name" required maxLength={80} autoComplete="name" className={fieldCls} /></label>

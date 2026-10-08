@@ -31,7 +31,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   return (
     <>
       <SiteHeader />
-      <main>
+      <main id="main" tabIndex={-1}>
         <section className="bg-forest-900 pb-24 pt-16 text-cream-50">
           <div className={`${pad} flex flex-col gap-14 lg:flex-row lg:items-start`}>
             <div className="flex min-w-0 flex-1 flex-col gap-6">

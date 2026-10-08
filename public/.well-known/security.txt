@@ -1,0 +1,5 @@
+# Replace the contact address and the expiry date before launch, and renew the date every year.
+Contact: mailto:security@example.org
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: en, ar, ms
+Canonical: https://YOUR-DOMAIN/.well-known/security.txt

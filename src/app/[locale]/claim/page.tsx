@@ -17,13 +17,13 @@ export default async function ClaimIndex({ params, searchParams }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto max-w-3xl px-6 py-12">
+      <main id="main" tabIndex={-1} className="mx-auto max-w-3xl px-6 py-12">
         <h1 className="font-display text-4xl font-medium text-forest-900">{t('title')}</h1>
         <p className="mt-3 text-lg text-muted">{t('intro')}</p>
         <ol className="mt-6 list-decimal space-y-1 ps-5 text-muted"><li>{t('step1')}</li><li>{t('step2')}</li><li>{t('step3')}</li></ol>
         <form action={`/${locale}/claim`} method="get" role="search" className="mt-8 flex flex-col gap-3 sm:flex-row">
           <label className="sr-only" htmlFor="cq">{t('searchLabel')}</label>
-          <input id="cq" name="q" defaultValue={q} placeholder={t('searchPlaceholder')} className="h-12 flex-1 rounded-xl border border-[#B9C4BD] px-4" />
+          <input id="cq" name="q" defaultValue={q} placeholder={t('searchPlaceholder')} className="h-12 flex-1 rounded-xl border border-[#7F9288] px-4" />
           <button className="h-12 rounded-xl bg-forest-900 px-6 font-semibold text-cream-50">{t('search')}</button>
         </form>
         {q.length >= 2 && (rows.length === 0

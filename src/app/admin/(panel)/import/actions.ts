@@ -2,6 +2,7 @@
 import { requirePermission } from '@/lib/auth';
 import { parseCsv } from '@/lib/csv';
 import { done, fail } from '@/lib/flash';
+import { isLimited } from '@/lib/rateLimit';
 import { friendlyError } from '@/lib/errors';
 import { getImportLookups } from '@/lib/data/importLookups';
 import { REQUIRED_COLUMNS, rowToPayload } from '@/features/import/columns';
@@ -11,6 +12,7 @@ const MAX_BYTES = 2 * 1024 * 1024, MAX_ROWS = 2000, BATCH = 200;
 export async function startImport(fd: FormData) {
   const { supabase, user } = await requirePermission('imports.manage');
   const back = '/admin/import';
+  if (await isLimited([[`import:user:${user.id}`, 20, 3600]])) return fail(back, 'Too many imports in the last hour. Please wait and try again.');
   const file = fd.get('file');
   if (!(file instanceof File) || file.size === 0) return fail(back, 'Choose a CSV file first.');
   if (!/\.csv$/i.test(file.name)) return fail(back, 'The file must be a .csv file (in Excel: Save as CSV UTF-8).');

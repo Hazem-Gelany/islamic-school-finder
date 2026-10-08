@@ -8,7 +8,11 @@
     "lint": "next lint",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "db:types": "supabase gen types typescript --local > src/types/database.ts"
+    "db:types": "supabase gen types typescript --local > src/types/database.ts",
+    "typecheck": "tsc --noEmit",
+    "db:test": "./scripts/db-test.sh",
+    "smoke": "node scripts/smoke-test.mjs",
+    "backup": "./scripts/backup.sh"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.0",
@@ -17,9 +21,11 @@
     "next-intl": "^4.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "server-only": "^0.0.1",
     "zod": "^3.23.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.48.0",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22.0.0",

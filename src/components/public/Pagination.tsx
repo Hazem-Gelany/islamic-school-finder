@@ -4,7 +4,7 @@ import { Link } from '@/i18n/navigation';
 export async function Pagination({ page, pages, href }: { page: number; pages: number; href: (p: number) => string }) {
   const t = await getTranslations('Schools');
   if (pages <= 1) return null;
-  const btn = 'flex h-11 items-center rounded-lg border border-[#B9C4BD] px-4 font-semibold hover:bg-mint-100';
+  const btn = 'flex h-11 items-center rounded-lg border border-[#7F9288] px-4 font-semibold hover:bg-mint-100';
   const off = 'flex h-11 items-center rounded-lg border border-line px-4 text-muted';
   return (
     <nav aria-label={t('pagination')} className="mt-8 flex flex-wrap items-center justify-center gap-3">

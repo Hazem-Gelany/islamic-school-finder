@@ -53,7 +53,7 @@ export default async function MatchPage({ params, searchParams }: Props) {
         <h1 className="mt-4 font-display text-4xl font-medium tracking-tight lg:text-5xl">{t('title')}</h1>
         <p className="mt-3 max-w-2xl text-lg text-mist">{t('intro')}</p>
       </div></div>
-      <main className="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[300px_1fr] lg:px-16">
+      <main id="main" tabIndex={-1} className="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[300px_1fr] lg:px-16">
         <aside><Filters facets={facets} values={search} mode="match" /></aside>
         <section aria-labelledby="match-h">
           {keys.length === 0 ? (
@@ -68,7 +68,7 @@ export default async function MatchPage({ params, searchParams }: Props) {
                 <h2 id="match-h" role="status" className="text-lg font-semibold">{t('results', { count: shown.length, total: keys.length })}</h2>
                 {countryName && <p className="text-sm text-muted">{t('showingIn', { place: pick(countryName.name as Record<string, string>, locale) })}</p>}
                 <p className="mt-2 max-w-2xl rounded-lg bg-[#F6F4EC] p-3 text-sm text-muted">{t('explain')}</p>
-                <Link href={q(fullOnly ? { full: '' } : { full: '1' })} className="mt-3 inline-flex min-h-10 items-center rounded-lg border border-[#B9C4BD] px-3 text-sm font-semibold hover:bg-mint-100">{fullOnly ? t('showAll') : t('onlyFull')}</Link>
+                <Link href={q(fullOnly ? { full: '' } : { full: '1' })} className="mt-3 inline-flex min-h-10 items-center rounded-lg border border-[#7F9288] px-3 text-sm font-semibold hover:bg-mint-100">{fullOnly ? t('showAll') : t('onlyFull')}</Link>
               </div>
               {failed && <p role="alert" className="rounded-xl bg-[#FCEDEA] p-4 text-[#8A1F11]">{t('error')}</p>}
               {!failed && shown.length === 0 && <div className="rounded-2xl border border-line bg-white p-10 text-center"><p className="font-display text-2xl font-semibold">{fullOnly ? t('noFull') : t('noResults')}</p><p className="mt-2 text-muted">{t('noResultsHint')}</p></div>}

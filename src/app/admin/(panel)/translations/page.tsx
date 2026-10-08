@@ -19,14 +19,14 @@ export default async function TranslationsPage({ searchParams }: { searchParams:
       <Flash error={error ? friendlyError(error) : undefined} />
       <nav aria-label="Missing language" className="mb-6 flex gap-2">
         {LANGS.map(([c, l]) => <Link key={c} href={`/admin/translations?missing=${c}`} aria-current={c === missing ? 'page' : undefined}
-          className={`flex h-11 items-center rounded-lg border px-4 font-semibold ${c === missing ? 'border-forest-900 bg-forest-900 text-cream-50' : 'border-[#B9C4BD] hover:bg-mint-100'}`}>Missing {l}</Link>)}
+          className={`flex h-11 items-center rounded-lg border px-4 font-semibold ${c === missing ? 'border-forest-900 bg-forest-900 text-cream-50' : 'border-[#7F9288] hover:bg-mint-100'}`}>Missing {l}</Link>)}
       </nav>
       <ul className="divide-y divide-line rounded-2xl border border-line bg-white">
         {rows.length === 0 && <li className="p-8 text-center text-muted">Every school has this language.</li>}
         {rows.map((r) => (
           <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
             <div><Link href={`/admin/schools/${r.id}`} className="font-semibold text-forest-900 hover:underline">{r.name ?? r.slug}</Link><p className="text-sm text-muted">{r.city}, {r.country} · has: {r.languages.join(', ').toUpperCase() || 'none'}</p></div>
-            <Link href={`/admin/schools/${r.id}`} className="flex h-10 items-center rounded-lg border border-[#B9C4BD] px-4 font-semibold hover:bg-mint-100">Add translation</Link>
+            <Link href={`/admin/schools/${r.id}`} className="flex h-10 items-center rounded-lg border border-[#7F9288] px-4 font-semibold hover:bg-mint-100">Add translation</Link>
           </li>
         ))}
       </ul>

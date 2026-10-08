@@ -14,7 +14,7 @@ export default async function LoginPage({ params, searchParams }: Props) {
   const next = safeNext(sp.next, `/${locale}/account`);
   return (
     <AuthCard title={t('loginTitle')}>
-      {sp.error && <Notice tone="err">{t(`err_${['invalid', 'unconfirmed', 'link'].includes(sp.error) ? sp.error : 'generic'}` as never)}</Notice>}
+      {sp.error && <Notice tone="err">{t(`err_${['invalid', 'unconfirmed', 'link', 'rate'].includes(sp.error) ? sp.error : 'generic'}` as never)}</Notice>}
       <form action={signIn} className="space-y-5">
         <input type="hidden" name="locale" value={locale} /><input type="hidden" name="next" value={next} />
         <label className="block text-sm font-semibold text-muted">{t('email')}<input name="email" type="email" required autoComplete="email" className={fieldCls} /></label>

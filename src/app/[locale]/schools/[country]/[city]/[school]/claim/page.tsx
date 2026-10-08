@@ -29,7 +29,7 @@ export default async function ClaimSchool({ params, searchParams }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto max-w-2xl px-6 py-12">
+      <main id="main" tabIndex={-1} className="mx-auto max-w-2xl px-6 py-12">
         <p className="text-sm"><Link className="underline" href={`/schools/${country}/${city}/${school}`}>← {name}</Link></p>
         <h1 className="mt-2 font-display text-4xl font-medium text-forest-900">{t('formTitle', { name })}</h1>
         {existing ? <div className="mt-6"><Notice tone="ok">{t(existing.status === 'approved' ? 'alreadyApproved' : 'alreadyPending')}</Notice><Link href="/account" className="mt-4 inline-block font-semibold underline">{t('goAccount')}</Link></div> : (
@@ -41,7 +41,7 @@ export default async function ClaimSchool({ params, searchParams }: Props) {
               <label className="block text-sm font-semibold text-muted">{t('jobTitle')}<input name="job_title" required minLength={2} maxLength={120} className={fieldCls} placeholder={t('jobTitleHint')} /></label>
               <label className="block text-sm font-semibold text-muted">{t('contactEmail')}<input name="contact_email" type="email" required defaultValue={user.email ?? ''} className={fieldCls} /><span className="mt-1 block text-xs font-normal">{t('contactEmailHint')}</span></label>
               <label className="block text-sm font-semibold text-muted">{t('evidence')}<input name="evidence_url" type="url" placeholder="https://" className={fieldCls} /><span className="mt-1 block text-xs font-normal">{t('evidenceHint')}</span></label>
-              <label className="block text-sm font-semibold text-muted">{t('message')}<textarea name="message" rows={4} maxLength={2000} className="mt-1.5 w-full rounded-[10px] border border-[#B9C4BD] p-3 text-base font-normal" /></label>
+              <label className="block text-sm font-semibold text-muted">{t('message')}<textarea name="message" rows={4} maxLength={2000} className="mt-1.5 w-full rounded-[10px] border border-[#7F9288] p-3 text-base font-normal" /></label>
               <button className={btnCls}>{t('submit')}</button>
             </form>
           </>)}

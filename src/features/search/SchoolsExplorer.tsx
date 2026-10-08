@@ -40,7 +40,7 @@ export async function SchoolsExplorer({ locale, search, preset }: { locale: stri
         </div>
       </div>
 
-      <main className="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[300px_1fr] lg:px-16">
+      <main id="main" tabIndex={-1} className="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[300px_1fr] lg:px-16">
         <aside><Filters facets={facets} values={s} q={s.q} sort={s.sort} /></aside>
         <section aria-labelledby="results-h">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
@@ -49,7 +49,7 @@ export async function SchoolsExplorer({ locale, search, preset }: { locale: stri
               <span className="font-semibold">{t('sort')}:</span>
               {SORTS.filter((k) => k !== 'distance' || s.lat != null).map((k) => (
                 <Link key={k} href={href({ sort: k, page: 1 })} aria-current={s.sort === k ? 'true' : undefined}
-                  className={`flex min-h-9 items-center rounded-lg border px-3 ${s.sort === k ? 'border-forest-900 bg-forest-900 text-cream-50' : 'border-[#B9C4BD] hover:bg-mint-100'}`}>{t(`sort_${k}` as never)}</Link>))}
+                  className={`flex min-h-9 items-center rounded-lg border px-3 ${s.sort === k ? 'border-forest-900 bg-forest-900 text-cream-50' : 'border-[#7F9288] hover:bg-mint-100'}`}>{t(`sort_${k}` as never)}</Link>))}
             </nav>
           </div>
           {error && <p role="alert" className="rounded-xl bg-[#FCEDEA] p-4 text-[#8A1F11]">{t('error')}</p>}
